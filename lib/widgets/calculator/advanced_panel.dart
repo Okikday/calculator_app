@@ -14,7 +14,7 @@ class AdvancedPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: width * 0.02),
+      margin: EdgeInsets.symmetric(horizontal: width * 0.04),
       height: height,
       width: width,
       decoration: BoxDecoration(color: CalculatorColors.mediumGray.withAlpha(200), borderRadius: BorderRadius.circular(24)),

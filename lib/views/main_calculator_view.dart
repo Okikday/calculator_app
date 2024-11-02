@@ -1,6 +1,8 @@
-import 'package:calculator_app/common/colors.dart';
+import 'package:calculator_app/widgets/calculator/ac_section.dart';
 import 'package:calculator_app/widgets/calculator/advanced_panel.dart';
 import 'package:calculator_app/widgets/calculator/display_panel.dart';
+import 'package:calculator_app/widgets/calculator/numbers_section.dart';
+import 'package:calculator_app/widgets/calculator/signs_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -41,6 +43,7 @@ class MainCalculatorView extends StatelessWidget {
                   ],
                 ),
               ),
+
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.035),
                 child: SizedBox(
@@ -49,57 +52,27 @@ class MainCalculatorView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ColoredBox(
-                          color: Colors.lightBlue,
-                          child: SizedBox(
-                            width: screenWidth * 0.64,
-                            height: screenHeight - statusBarHeight/2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ColoredBox(
-                                  color: Colors.orange,
-                                  child: SizedBox(
-                                    width: screenWidth * 0.64,
-                                    height: screenHeight * 0.09,
-                                  ),
-                                ),
-                                ColoredBox(
-                                  color: Colors.purple,
-                                  child: SizedBox(
-                                    width: screenWidth * 0.65,
-                                    height: screenHeight * 0.41,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
+                      SizedBox(
+                        width: screenWidth * 0.64,
+                        height: screenHeight - statusBarHeight/2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            
+                            //AC part
+                            AcSection(height: screenHeight * 0.09, width: screenWidth * 0.64),
+                            
+                            //Numbers section
+                            NumbersSection(height: screenHeight * 0.41, width: screenWidth * 0.65)
+                          ],
+                        ),
+                      ),
 
-                      ColoredBox(
-                          color: Colors.black,
-                          child: SizedBox(
-                            width: screenWidth * 0.24,
-                            height: screenHeight - statusBarHeight/2,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: ColoredBox(
-                                    color: Colors.green,
-                                    child: SizedBox(
-                                      width: screenWidth * 0.24,
-                                    ),
-                                  ),
-                                ),
-                                ColoredBox(
-                                  color: Colors.indigo,
-                                  child: SizedBox(
-                                    width: screenWidth * 0.24,
-                                    height: screenHeight * 0.08,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
+                      SizedBox(
+                        width: screenWidth * 0.24,
+                        height: screenHeight - statusBarHeight/2,
+                        child: SignsSection(screenHeight: screenHeight, width: screenWidth * 0.24)
+                      ),
                     ],
                   ),
                 ),
