@@ -1,3 +1,3 @@
-class UiValues {
+class UiValues{
   
 }

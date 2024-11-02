@@ -1,21 +1,50 @@
 name: calculator_app
-description: "A new Flutter project."
+description: "A Calculator App"
 publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.5.3
+  sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.0
   get: ^4.6.6
+  google_fonts: ^6.2.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   math_expressions: ^2.6.0
+
+flutter_native_splash:
+  android: true
+  ios: true
+
+  color: "#FFFFFF"
+  image: "assets/logo/app_icon.png"
+  color_dark: "#333F52"
+  image_dark: "assets/logo/app_icon_dark.png"
+
+  android_12:
+    color: "#FFFFFF"
+    image: "assets/logo/app_icon.png"
+    color_dark: "#333F52"
+    image_dark: "assets/logo/app_icon_dark.png"
+
+flutter_launcher_icons:
+  image_path: "assets/logo/app_icon.png"
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.2
+
+
+  
 
 flutter:
   uses-material-design: true
@@ -25,6 +54,7 @@ flutter:
     - assets/fonts/
     - assets/icons/
     - assets/images/
+    - assets/logo/
 
   #-FONTS
   fonts:

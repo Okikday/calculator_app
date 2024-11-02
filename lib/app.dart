@@ -1,23 +1,28 @@
+import 'package:calculator_app/controller/state/ui_values_controller.dart';
+import 'package:calculator_app/views/main_calculator_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final UiValuesController uiValuesController = Get.put(UiValuesController());
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
 
-    return const GetMaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
+    return Builder(builder: (context) {
+      return GetMaterialApp(
+        title: "Calculator App",
+        debugShowCheckedModeBanner: false,
+        theme: uiValuesController.lightTheme.value,
+        darkTheme: uiValuesController.darkTheme.value,
+        home: const MainCalculatorView(),
+      );
+    });
   }
 }
