@@ -10,10 +10,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UiValuesController uiValuesController = Get.put(UiValuesController());
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
 
     return Builder(builder: (context) {
       return GetMaterialApp(

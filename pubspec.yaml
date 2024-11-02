@@ -31,12 +31,7 @@ flutter_native_splash:
     color_dark: "#333F52"
     image_dark: "assets/logo/app_icon_dark.png"
 
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/logo/app_icon.png"
-  remove_alpha_ios: true
-
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter

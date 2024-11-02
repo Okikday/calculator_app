@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:calculator_app/widgets/calculator/ac_section.dart';
 import 'package:calculator_app/widgets/calculator/advanced_panel.dart';
 import 'package:calculator_app/widgets/calculator/display_panel.dart';
@@ -13,8 +15,9 @@ class MainCalculatorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = Get.size.width;
-    final double screenHeight = Get.size.height;
+    final double screenHeight = MediaQuery.of(context).size.height;
     final double statusBarHeight = MediaQuery.paddingOf(context).top;
+    log("screenHeight: $screenHeight");
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(systemNavigationBarColor: Get.theme.scaffoldBackgroundColor, statusBarColor: Colors.transparent),
