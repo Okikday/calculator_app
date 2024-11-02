@@ -2,6 +2,9 @@
 
 A Calculator App with sleek, modern looking UI built on Flutter.
 Minimal, yet advanced with non-overwhelming subtle customization
+Building ongoing
 
-Feating and UI Design supervised by Expert designer + dev => https://github.com/dev-xero.
+# Feating and UI Design supervised by https://github.com/dev-xero.
+
+
 
