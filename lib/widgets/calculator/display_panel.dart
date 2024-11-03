@@ -23,13 +23,18 @@ class DisplayPanel extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(height: height * 0.35, width: width, child: ConstantWidgets.text(context, "128 + 128", fontSize: 32, align: TextAlign.end),),
+          SizedBox(height: height * 0.35, width: width, child: FittedBox(
+            alignment: Alignment.centerRight,
+            child: ConstantWidgets.text(context, "128 + 128", fontSize: 32, align: TextAlign.end)),),
           Container(height: 8, width: width, decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: CalculatorColors.lightGray),),
-          Row(
-            children: [
-            ConstantWidgets.text(context, "=", fontSize: 32),
-            Expanded(child: ConstantWidgets.text(context, "256", align: TextAlign.end, fontSize: 32))
-          ],)
+          SizedBox(
+            height: height * 0.35,
+            child: Row(
+              children: [
+              ConstantWidgets.text(context, "=", fontSize: 32),
+              Expanded(child: ConstantWidgets.text(context, "256", align: TextAlign.end, fontSize: 32))
+            ],),
+          )
         ],
       ),
     );
