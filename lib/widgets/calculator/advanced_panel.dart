@@ -1,5 +1,7 @@
 import 'package:calculator_app/common/colors.dart';
 import 'package:calculator_app/common/constant_widgets.dart';
+import 'package:calculator_app/common/custom_elevated_button.dart';
+import 'package:calculator_app/widgets/calculator/calculator_widgets_data/calculator_widgets_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +27,7 @@ class AdvancedPanel extends StatelessWidget {
         SizedBox(
           height: height - height * 0.04,
           width: width * 0.6 - width * 0.04,
-          child: Center(child: AdvancedFuncsGridView(width: width * 0.66 - width * 0.04, height: height - height * 0.04)),
+          child: Center(child: AdvancedKeysGridView(width: width * 0.66 - width * 0.04, height: height - height * 0.04)),
         ),
         const VerticalDivider(),
         SizedBox(
@@ -56,30 +58,87 @@ class NavigationFuncSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-              height: height * 0.2,
-              width: width * 0.4,
+            CustomElevatedButton(
+              backgroundColor: CalculatorColors.mintGreen,
+              pixelHeight: height * 0.14,
+              pixelWidth: width * 0.44,
+              borderRadius: 4,
+              onClick: (){},
+              child: FittedBox(
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: ConstantWidgets.text(context, "SHIFT", fontWeight: FontWeight.w600),
+                ),
+              ),
             ),
-            Container(
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-              height: height * 0.2,
-              width: width * 0.4,
+            CustomElevatedButton(
+              backgroundColor: CalculatorColors.lavender,
+              pixelHeight: height * 0.14,
+              pixelWidth: width * 0.42,
+              borderRadius: 4,
+              onClick: (){},
+              child: FittedBox(
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: ConstantWidgets.text(context, "MODE", fontWeight: FontWeight.w600),
+                ),
+              ),
             ),
           ],
         ),
         Container(
-          width: width * 0.95,
-          height: width * 0.95,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-        )
+            width: width * 0.95,
+            height: width * 0.95,
+            padding: EdgeInsets.all(width * 0.95 * 0.03),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: (){},
+                  child: Image.asset(
+                    "assets/icons/top_nav_icon.png",
+                    width: width * 0.95 * 0.28,
+                    height: width * 0.95 * 0.28,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  InkWell(
+                  onTap: (){},
+                  child: Image.asset(
+                    "assets/icons/left_nav_icon.png",
+                    width: width * 0.95 * 0.28,
+                    height: width * 0.95 * 0.28,
+                  ),
+                ),
+                InkWell(
+                  onTap: (){},
+                  child: Image.asset(
+                    "assets/icons/right_nav_icon.png",
+                    width: width * 0.95 * 0.28,
+                    height: width * 0.95 * 0.28,
+                  ),
+                ),
+                ]),
+                InkWell(
+                  onTap: (){},
+                  child: Image.asset(
+                    "assets/icons/bottom_nav_icon.png",
+                    width: width * 0.95 * 0.28,
+                    height: width * 0.95 * 0.28,
+                  ),
+                ),
+              ],
+            ))
       ],
     );
   }
 }
 
-class AdvancedFuncsGridView extends StatelessWidget {
-  const AdvancedFuncsGridView({
+class AdvancedKeysGridView extends StatelessWidget {
+  const AdvancedKeysGridView({
     super.key,
     required this.width,
     required this.height,
@@ -93,23 +152,34 @@ class AdvancedFuncsGridView extends StatelessWidget {
     final double aspectRatio = Get.size.aspectRatio;
 
     return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          for(int rowIndex = 0; rowIndex < 3; rowIndex++)
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        for (int rowIndex = 0; rowIndex < 3; rowIndex++)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              for(int i = 0; i < 4; i++)
-              Container(
-              width: aspectRatio >= 0.56 ? width * 0.16 : width * 0.2,
-              height: aspectRatio >= 0.56 ? width * 0.16 : width * 0.2,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-              child: ConstantWidgets.text(context, i.toString(), color: Colors.black),
-            )
+              for (int i = 0; i < 4; i++)
+                CustomElevatedButton(
+                  pixelWidth: aspectRatio >= 0.56 ? width * 0.16 : width * 0.2,
+                  pixelHeight:
+                      rowIndex == 2 && i == 3 ? (aspectRatio >= 0.56 ? width * 0.12 : width * 0.14) : (aspectRatio >= 0.56 ? width * 0.16 : width * 0.2),
+                  shape: rowIndex == 2 && i == 3 ? null : const CircleBorder(),
+                  borderRadius: 8,
+                  backgroundColor: rowIndex == 2 && i == 3 ? CalculatorColors.lavender : CalculatorColors.lightGray,
+                  onClick: () {},
+                  child: rowIndex == 2 && i == 3
+                      ? RichText(
+                          text: const TextSpan(text: "S⇔D", style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),
+                        )
+                      : RichText(
+                          text: TextSpan(
+                              text: CalculatorWidgetsData.advancedPanelKeys[rowIndex * 4 + i + 1]['name'],
+                              style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),
+                        ),
+                )
             ],
           )
-        ],
-      );
+      ],
+    );
   }
 }

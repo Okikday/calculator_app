@@ -15,6 +15,9 @@ class CustomElevatedButton extends StatelessWidget {
   final double? screenWidth;
   final Color? textColor;
   final BorderSide? side;
+  final OutlinedBorder? shape;
+  final Color? overlayColor;
+
   const CustomElevatedButton({
     super.key,
     this.label,
@@ -29,7 +32,9 @@ class CustomElevatedButton extends StatelessWidget {
     this.screenHeight,
     this.screenWidth,
     this.textColor,
-    this.side
+    this.side,
+    this.shape,
+    this.overlayColor
   });
 
   @override
@@ -43,9 +48,9 @@ class CustomElevatedButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(backgroundColor ?? Theme.of(context).primaryColor),
             padding: const WidgetStatePropertyAll(EdgeInsets.all(0)),
-            overlayColor: WidgetStatePropertyAll(Colors.blue.withOpacity(0.1)),
+            overlayColor: WidgetStatePropertyAll(overlayColor ?? Colors.blue.withOpacity(0.1)),
             elevation: WidgetStatePropertyAll(elevation),
-            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius ?? 24) )),
+            shape: WidgetStatePropertyAll(shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius ?? 24) )),
             side: WidgetStatePropertyAll(side),
           ),
           child: child ?? Center(
