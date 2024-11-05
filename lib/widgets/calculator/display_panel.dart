@@ -5,6 +5,7 @@ import 'package:calculator_app/common/constant_widgets.dart';
 import 'package:calculator_app/widgets/calculator/states/advanced_panel_state.dart';
 import 'package:calculator_app/widgets/calculator/states/display_panel_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 class DisplayPanel extends StatelessWidget {
