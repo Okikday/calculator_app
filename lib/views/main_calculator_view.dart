@@ -16,9 +16,11 @@ class MainCalculatorView extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final double aspectRatio = Get.size.aspectRatio;
     final double statusBarHeight = MediaQuery.paddingOf(context).top;
     log("screenHeight: $screenHeight");
     log("screenWidth: $screenWidth");
+    log("aspectRatio: $aspectRatio");
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(systemNavigationBarColor: Get.theme.scaffoldBackgroundColor, statusBarColor: Colors.transparent),
