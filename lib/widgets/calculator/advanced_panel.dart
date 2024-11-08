@@ -2,6 +2,7 @@ import 'package:calculator_app/common/colors.dart';
 import 'package:calculator_app/common/constant_widgets.dart';
 import 'package:calculator_app/common/custom_elevated_button.dart';
 import 'package:calculator_app/widgets/calculator/calculator_widgets_data/calculator_widgets_data.dart';
+import 'package:calculator_app/widgets/calculator/functions/button_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -94,7 +95,7 @@ class NavigationFuncSection extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
+                GestureDetector(
                   onTap: (){},
                   child: Image.asset(
                     "assets/icons/top_nav_icon.png",
@@ -105,16 +106,17 @@ class NavigationFuncSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  InkWell(
-                  onTap: (){},
+                  GestureDetector(
+                  onTap: ButtonFunctions.moveCursorLeft,
                   child: Image.asset(
                     "assets/icons/left_nav_icon.png",
                     width: width * 0.95 * 0.28,
                     height: width * 0.95 * 0.28,
                   ),
                 ),
-                InkWell(
-                  onTap: (){},
+                GestureDetector(
+                  onTap: ButtonFunctions.moveCursorRight,
+                  
                   child: Image.asset(
                     "assets/icons/right_nav_icon.png",
                     width: width * 0.95 * 0.28,
@@ -122,7 +124,7 @@ class NavigationFuncSection extends StatelessWidget {
                   ),
                 ),
                 ]),
-                InkWell(
+                GestureDetector(
                   onTap: (){},
                   child: Image.asset(
                     "assets/icons/bottom_nav_icon.png",

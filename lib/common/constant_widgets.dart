@@ -43,19 +43,29 @@ class ConstantWidgets{
 
   static void showFlushBar(BuildContext context, String msg, {
     int duration = 1500,
+    int animDuration = 500,
+    Color bgColor = const Color.fromARGB(187, 0, 0, 0),
+    Color? msgColor,
+    double? msgTextSize,
+    EdgeInsets margin = const EdgeInsets.fromLTRB(20, 0, 20, 20),
+    EdgeInsets padding = const EdgeInsets.all(16),
+    double borderRadius = 64,
     FlushbarPosition position = FlushbarPosition.BOTTOM,
+    double barBlur = 4,
   }) {
     if (context.mounted) {
       Flushbar(
         message: msg,
+        messageColor: msgColor,
+        messageSize: msgTextSize,
         duration: Duration(milliseconds: duration),
-        animationDuration: const Duration(milliseconds: 500),
+        animationDuration: Duration(milliseconds: animDuration),
         flushbarPosition: position,
-        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-        borderRadius: BorderRadius.circular(64),
-        showProgressIndicator: true,
-        backgroundColor: Colors.black.withOpacity(0.9),
-        padding: const EdgeInsets.all(16),
+        margin: margin,
+        borderRadius: BorderRadius.circular(borderRadius),
+        backgroundColor: bgColor,
+        padding: padding,
+        barBlur: barBlur,
       ).show(context);
     }
   }

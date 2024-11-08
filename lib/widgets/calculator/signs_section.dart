@@ -20,7 +20,6 @@ class SignsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double aspectRatio = Get.size.aspectRatio;
-    final DisplayPanelState displayPanelState = Get.put<DisplayPanelState>(DisplayPanelState());
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

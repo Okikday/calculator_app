@@ -21,7 +21,10 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: uiValuesController.lightTheme.value,
       darkTheme: uiValuesController.darkTheme.value,
-      home: const MainCalculatorView().animate().scale(begin: const Offset(1.2, 1.2), end: const Offset(1, 1), duration: const Duration(milliseconds: 450), curve: Curves.decelerate),
+      home: const MainCalculatorView()
+          .animate()
+          .fadeIn(duration: const Duration(milliseconds: 450), curve: Curves.decelerate)
+          .scale(begin: const Offset(1.1, 1.1), end: const Offset(1, 1), duration: const Duration(milliseconds: 450), curve: Curves.decelerate),
     );
   }
 }
