@@ -23,7 +23,6 @@ class App extends StatelessWidget {
       darkTheme: uiValuesController.darkTheme.value,
       home: const MainCalculatorView()
           .animate()
-          .fadeIn(duration: const Duration(milliseconds: 450), curve: Curves.decelerate)
           .scale(begin: const Offset(1.1, 1.1), end: const Offset(1, 1), duration: const Duration(milliseconds: 450), curve: Curves.decelerate),
     );
   }

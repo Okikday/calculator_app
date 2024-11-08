@@ -43,7 +43,6 @@ class NumbersSection extends StatelessWidget {
                         onClick: () {
                           ButtonFunctions.onNumberSectionClicked(
                             allIndex: (rowIndex * 3 + index),
-                            displayPanelState: displayPanelState
                           );
                         },
                         child: ConstantWidgets.text(context, CalculatorWidgetsData.numbersKeys[(rowIndex * 3 + index)]['name'].toString(),

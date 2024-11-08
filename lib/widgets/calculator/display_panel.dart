@@ -123,7 +123,7 @@ class InputTextField extends StatelessWidget {
                         onPressed: () async{
                           await editableTextState.pasteText(SelectionChangedCause.longPress);
                           editableTextState.hideToolbar();
-                          if(context.mounted) ConstantWidgets.showFlushBar(context, "Pasted text", duration: 500,);
+                          ConstantWidgets.showFlushBar(Get.context!, "Pasted text", duration: 500,);
                         },
                         child: const Text('Paste'),
                       ),
@@ -162,7 +162,6 @@ class InputTextField extends StatelessWidget {
                 selectionColor: Colors.blue,
                 selectionHeightStyle: BoxHeightStyle.max,
                 enableInteractiveSelection: true,
-                selectionControls: CupertinoTextSelectionControls(),
                 showSelectionHandles: true,
               )),
         ),

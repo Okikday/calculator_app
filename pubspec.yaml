@@ -11,11 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
+  flutter_quill: ^10.8.5
   get: ^4.6.6
   google_fonts: ^6.2.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   math_expressions: ^2.6.0
+  super_editor: ^0.3.0-dev.9
 
 flutter_native_splash:
   android: true

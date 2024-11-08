@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:calculator_app/common/colors.dart';
 import 'package:calculator_app/common/constant_widgets.dart';
 import 'package:calculator_app/common/custom_elevated_button.dart';
 import 'package:calculator_app/widgets/calculator/calculator_widgets_data/calculator_widgets_data.dart';
 import 'package:calculator_app/widgets/calculator/functions/button_functions.dart';
+import 'package:calculator_app/widgets/calculator/states/advanced_panel_state.dart';
+import 'package:calculator_app/widgets/calculator/states/display_panel_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 class AdvancedPanel extends StatelessWidget {
@@ -34,7 +39,7 @@ class AdvancedPanel extends StatelessWidget {
         SizedBox(
           height: height - height * 0.04,
           width: width * 0.3 - width * 0.04,
-          child: NavigationFuncSection(height: height - height * 0.04, width: width * 0.3 - width * 0.04),
+          child: NavigationFuncSection(height: height - height * 0.04, width: width * 0.3 - width * 0.02),
         ),
       ]),
     );
@@ -53,89 +58,102 @@ class NavigationFuncSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CustomElevatedButton(
-              backgroundColor: CalculatorColors.mintGreen,
-              pixelHeight: height * 0.14,
-              pixelWidth: width * 0.44,
-              borderRadius: 4,
-              onClick: (){},
-              child: FittedBox(
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ConstantWidgets.text(context, "SHIFT", fontWeight: FontWeight.w600),
-                ),
+    return Obx(() {
+      final bool isShiftMode = advancedPanelState.isShiftMode.value;
+
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomElevatedButton(
+                backgroundColor: isShiftMode ? CalculatorColors.lightPink : CalculatorColors.mintGreen,
+                pixelHeight: height * 0.14,
+                pixelWidth: width * 0.44,
+                borderRadius: isShiftMode ? width * 0.44 : 4,
+                onClick: () {
+                  advancedPanelState.setShiftMode(!advancedPanelState.isShiftMode.value);
+                },
+                child: isShiftMode
+                    ? FittedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(4, 4, 6, 4),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [const Icon(Icons.cancel), ConstantWidgets.text(context, "SHIFT", fontWeight: FontWeight.w600)],
+                          ),
+                        ),
+                      )
+                    : FittedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: ConstantWidgets.text(context, "SHIFT", fontWeight: FontWeight.w600),
+                        ),
+                      ),
               ),
-            ),
-            CustomElevatedButton(
-              backgroundColor: CalculatorColors.lavender,
-              pixelHeight: height * 0.14,
-              pixelWidth: width * 0.42,
-              borderRadius: 4,
-              onClick: (){},
-              child: FittedBox(
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ConstantWidgets.text(context, "MODE", fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-          ],
-        ),
-        Container(
-            width: width * 0.95,
-            height: width * 0.95,
-            padding: EdgeInsets.all(width * 0.95 * 0.03),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: (){},
-                  child: Image.asset(
-                    "assets/icons/top_nav_icon.png",
-                    width: width * 0.95 * 0.28,
-                    height: width * 0.95 * 0.28,
+              CustomElevatedButton(
+                backgroundColor: CalculatorColors.lavender,
+                pixelHeight: height * 0.14,
+                pixelWidth: isShiftMode ? width * 0.38 : width * 0.42,
+                borderRadius: 4,
+                onClick: () {},
+                child: FittedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ConstantWidgets.text(context, "MODE", fontWeight: FontWeight.w600),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+              ),
+            ],
+          ),
+          Container(
+              width: width * 0.95,
+              height: width * 0.95,
+              padding: EdgeInsets.all(width * 0.95 * 0.03),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   GestureDetector(
-                  onTap: ButtonFunctions.moveCursorLeft,
-                  child: Image.asset(
-                    "assets/icons/left_nav_icon.png",
-                    width: width * 0.95 * 0.28,
-                    height: width * 0.95 * 0.28,
+                    onTap: () {},
+                    child: Image.asset(
+                      "assets/icons/top_nav_icon.png",
+                      width: width * 0.95 * 0.28,
+                      height: width * 0.95 * 0.28,
+                    ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: ButtonFunctions.moveCursorRight,
-                  
-                  child: Image.asset(
-                    "assets/icons/right_nav_icon.png",
-                    width: width * 0.95 * 0.28,
-                    height: width * 0.95 * 0.28,
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    GestureDetector(
+                      onTap: ButtonFunctions.moveCursorLeft,
+                      child: Image.asset(
+                        "assets/icons/left_nav_icon.png",
+                        width: width * 0.95 * 0.28,
+                        height: width * 0.95 * 0.28,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: ButtonFunctions.moveCursorRight,
+                      child: Image.asset(
+                        "assets/icons/right_nav_icon.png",
+                        width: width * 0.95 * 0.28,
+                        height: width * 0.95 * 0.28,
+                      ),
+                    ),
+                  ]),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Image.asset(
+                      "assets/icons/bottom_nav_icon.png",
+                      width: width * 0.95 * 0.28,
+                      height: width * 0.95 * 0.28,
+                    ),
                   ),
-                ),
-                ]),
-                GestureDetector(
-                  onTap: (){},
-                  child: Image.asset(
-                    "assets/icons/bottom_nav_icon.png",
-                    width: width * 0.95 * 0.28,
-                    height: width * 0.95 * 0.28,
-                  ),
-                ),
-              ],
-            ))
-      ],
-    );
+                ],
+              ))
+        ],
+      );
+    });
   }
 }
 
@@ -168,7 +186,7 @@ class AdvancedKeysGridView extends StatelessWidget {
                   shape: rowIndex == 2 && i == 3 ? null : const CircleBorder(),
                   borderRadius: 8,
                   backgroundColor: rowIndex == 2 && i == 3 ? CalculatorColors.lavender : CalculatorColors.lightGray,
-                  onClick: () {},
+                  onClick: () => ButtonFunctions.onAdvancedSectionClicked(rowIndex * 4 + i + 1),
                   child: rowIndex == 2 && i == 3
                       ? RichText(
                           text: const TextSpan(text: "S⇔D", style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),

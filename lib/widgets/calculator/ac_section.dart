@@ -33,7 +33,7 @@ class AcSection extends StatelessWidget {
                   pixelHeight: width * 0.2,
                   shape: const CircleBorder(),
                   backgroundColor: index == 2 || index == 3 ? (index == 2 ? CalculatorColors.paleYellow : CalculatorColors.lightPink) : const Color(0xFFD9D9D9),
-                  onClick: () => ButtonFunctions.onAcSectionClicked(index: index, displayPanelState: displayPanelState),
+                  onClick: () => ButtonFunctions.onAcSectionClicked(index: index,),
                   child: ConstantWidgets.text(context, CalculatorWidgetsData.acSectionKeys[index]['name'], color: Colors.black, fontWeight: FontWeight.w600),
                 )),
       ),

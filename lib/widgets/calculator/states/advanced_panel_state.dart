@@ -1,6 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+final AdvancedPanelState advancedPanelState = Get.put<AdvancedPanelState>(AdvancedPanelState());
+
 class AdvancedPanelState extends GetxController{
-  var inputController = TextEditingController().obs;
+  Rx<bool> isShiftMode = false.obs;
+
+  setShiftMode(bool mode) => isShiftMode.value = mode;
+
 }

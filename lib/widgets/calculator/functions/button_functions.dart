@@ -10,7 +10,6 @@ class ButtonFunctions {
   // On Click the numbers section
   static void onNumberSectionClicked({
     required int allIndex,
-    required DisplayPanelState displayPanelState,
   }) {
     final TextEditingController controller = displayPanelState.inputController.value;
     if (!displayPanelState.inputFocusNode.value.hasFocus) displayPanelState.inputFocusNode.value.requestFocus();
@@ -42,7 +41,6 @@ class ButtonFunctions {
 // On Click the AC sections
   static void onAcSectionClicked({
     required int index,
-    required DisplayPanelState displayPanelState,
   }) {
     final TextEditingController controller = displayPanelState.inputController.value;
     if (!displayPanelState.inputFocusNode.value.hasFocus) {
@@ -86,7 +84,7 @@ class ButtonFunctions {
   }
 
   // On Click Sign Section
-  static void onSignsSectionClicked({required int index, required DisplayPanelState displayPanelState}) {
+  static void onSignsSectionClicked({required int index,}) {
     final TextEditingController controller = displayPanelState.inputController.value;
     if (!displayPanelState.inputFocusNode.value.hasFocus) displayPanelState.inputFocusNode.value.requestFocus();
 
@@ -119,6 +117,30 @@ class ButtonFunctions {
       } else {
         ConstantWidgets.showFlushBar(Get.context!, "First Input a number", duration: 1000);
       }
+    }
+  }
+
+  static void onAdvancedSectionClicked(int index){
+    final TextEditingController controller = displayPanelState.inputController.value;
+
+    if(index == 11){
+
+    }
+    else{
+      int cursorOffset = controller.selection.baseOffset;
+      if (cursorOffset == -1) cursorOffset = controller.text.length;
+
+      final String newText = CalculatorWidgetsData.numbersKeys[index]['inputAs'].toString();
+
+      controller.text = controller.text.replaceRange(
+        cursorOffset,
+        cursorOffset,
+        newText,
+      );
+
+      controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: cursorOffset + newText.length),
+      );
     }
   }
 
