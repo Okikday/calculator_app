@@ -11,174 +11,92 @@ enum TextFieldPlacement {
   centerRight,
 }
 
-class EditableTextWidget extends StatefulWidget {
-  const EditableTextWidget({Key? key}) : super(key: key);
+class EditableTextWidget {
+  // Controllers and Focus Nodes for back and front text fields
+  final TextEditingController backController;
+  final FocusNode backFocusNode;
+  final TextEditingController frontController;
+  final FocusNode frontFocusNode;
+  final ScrollController scrollController;
 
-  @override
-  _EditableTextWidgetState createState() => _EditableTextWidgetState();
-}
+  // Maps and Lists to manage field elements and positioning
+  final Map<String, dynamic> frontTextFieldElements = {};
+  final List<Map<String, dynamic>> generalPositioning = [];
 
-class _EditableTextWidgetState extends State<EditableTextWidget> {
-  // Shared controller and focus node for back and front text fields
-  static final TextEditingController backController = TextEditingController();
-  static final FocusNode backFocusNode = FocusNode();
-  static final ScrollController scrollController = ScrollController();
+  // Dimensions
+  final double height;
+  final double width;
 
-  // Tracking positions and managing dynamic `frontTextField` placements
-  final List<Map<String, dynamic>> frontTextFieldElements = [];
-  final Map<int, Map<String, dynamic>> generalPositioning = {}; // Track element placements, positioning, etc.
+  EditableTextWidget({
+    required this.height,
+    required this.width,
+  })  : backController = TextEditingController(),
+        backFocusNode = FocusNode(),
+        frontController = TextEditingController(),
+        frontFocusNode = FocusNode(),
+        scrollController = ScrollController();
 
-  static const double height = 100;
-  static const double width = 320;
+  // Initialize controllers for managing field elements and positioning
+  void createControllers() {}
 
-  @override
-  void initState() {
-    super.initState();
-    backFocusNode.addListener(() => _updateGeneralPositioning());
+  // Adds a special input with positioning and custom configuration
+  void addSpecialInput({
+    required String name,
+    required List<TextFieldPlacement> placements,
+  }) {}
+
+  // Deletes content based on cursor position and element positioning
+  void del() {}
+
+  // Clears all inputs and resets controllers
+  void clearAll() {}
+
+  // Tracks and retrieves the text or element at a specified position
+  Map<String, dynamic> getTextAtPosition(int position) {
+    return {};
   }
 
-  // Background main text field widget
+  // Back text field (EditableText widget)
   Widget backTextField() {
     return EditableText(
       controller: backController,
       focusNode: backFocusNode,
-      style: const TextStyle(fontSize: 24, color: Colors.black),
+      style: TextStyle(fontSize: height * 0.8, color: Colors.black),
       cursorColor: Colors.blue.withOpacity(0.5),
       backgroundCursorColor: Colors.white,
-      textAlign: TextAlign.left,
-      scrollController: scrollController,
-      keyboardType: TextInputType.none,
-      toolbarOptions: const ToolbarOptions(copy: false, cut: false, paste: false, selectAll: false),
     );
   }
 
-  // Special Input Text Field Widget (for placements like subscript, superscript)
-  Widget frontTextField({
-    required TextFieldPlacement placement,
-    required TextEditingController controller,
-    required FocusNode focusNode,
-  }) {
-    return Positioned(
-      top: _getVerticalOffset(placement),
-      left: _getHorizontalOffset(placement),
-      child: SizedBox(
-        height: 30,
-        width: 80,
+  // Front text field with positioning functionality
+  Widget frontTextField({List<TextFieldPlacement>? placements}) {
+    if (placements == null || placements.isEmpty) {
+      return SizedBox(
+        height: height,
         child: EditableText(
-          controller: controller,
-          focusNode: focusNode,
-          style: const TextStyle(fontSize: 16, color: Colors.red),
+          controller: frontController,
+          focusNode: frontFocusNode,
+          style: TextStyle(fontSize: height * 0.8, color: Colors.black),
           cursorColor: Colors.red.withOpacity(0.5),
           backgroundCursorColor: Colors.white,
-          textAlign: TextAlign.center,
-          scrollController: scrollController,
-          toolbarOptions: const ToolbarOptions(copy: false, cut: false, paste: false, selectAll: false),
         ),
-      ),
-    );
-  }
-
-  // Position offset calculations
-  double _getVerticalOffset(TextFieldPlacement placement) {
-    switch (placement) {
-      case TextFieldPlacement.topSuperscript:
-        return 10;
-      case TextFieldPlacement.bottomSubscript:
-        return height - 40;
-      case TextFieldPlacement.centerLeft:
-      case TextFieldPlacement.centerRight:
-        return height / 2 - 15;
-      default:
-        return height / 2 - 15; // Default center
+      );
     }
+    return Container(); // Replace with further positioning logic
   }
 
-  double _getHorizontalOffset(TextFieldPlacement placement) {
-    switch (placement) {
-      case TextFieldPlacement.leftSubscript:
-      case TextFieldPlacement.leftSuperScript:
-        return 10;
-      case TextFieldPlacement.rightSubscript:
-      case TextFieldPlacement.rightSuperscript:
-        return width - 90;
-      case TextFieldPlacement.centerLeft:
-        return width / 4;
-      case TextFieldPlacement.centerRight:
-        return (width / 4) * 3;
-      default:
-        return width / 2 - 40; // Default center
-    }
-  }
-
-  // Add a special input with specific placement
-  void addSpecialInput(TextFieldPlacement placement, String label) {
-    setState(() {
-      // Add placeholder in backTextField at cursor position
-      int cursorPosition = backController.selection.baseOffset;
-      String currentText = backController.text;
-      String placeholder = "[$label]"; // placeholder for special input
-
-      backController.text = currentText.substring(0, cursorPosition) +
-          placeholder +
-          currentText.substring(cursorPosition);
-
-      // Add frontTextField element
-      frontTextFieldElements.add({
-        'placement': placement,
-        'controller': TextEditingController(),
-        'focusNode': FocusNode(),
-        'label': label,
-        'placeholderPosition': cursorPosition
-      });
-
-      _updateGeneralPositioning();
-    });
-  }
-
-  // Add regular text input to backTextField
-  void addNormalInput(String text) {
-    int cursorPosition = backController.selection.baseOffset;
-    backController.text = backController.text.substring(0, cursorPosition) +
-        text +
-        backController.text.substring(cursorPosition);
-
-    backController.selection = TextSelection.collapsed(
-      offset: cursorPosition + text.length,
-    );
-
-    _updateGeneralPositioning();
-  }
-
-  // Update `generalPositioning` map
-  void _updateGeneralPositioning() {
-    generalPositioning.clear();
-    // Populate map based on current elements for tracking
-    for (int i = 0; i < frontTextFieldElements.length; i++) {
-      var element = frontTextFieldElements[i];
-      generalPositioning[i] = {
-        'placement': element['placement'],
-        'controller': element['controller'],
-        'focusNode': element['focusNode'],
-        'type': 'special',
-        'label': element['label']
-      };
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  // Container to display layered text fields in a stack
+  Widget containerWidget() {
     return SizedBox(
       height: height,
       width: width,
       child: Stack(
         children: [
           backTextField(),
-          ...frontTextFieldElements.map(
-            (element) => frontTextField(
-              placement: element['placement'],
-              controller: element['controller'],
-              focusNode: element['focusNode'],
-            ),
+          ListView.builder(
+            controller: scrollController,
+            itemBuilder: (context, index) {
+              return frontTextField();
+            },
           ),
         ],
       ),
