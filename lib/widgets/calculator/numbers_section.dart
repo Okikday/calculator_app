@@ -41,9 +41,9 @@ class NumbersSection extends StatelessWidget {
                         shape: const CircleBorder(),
                         backgroundColor: CalculatorColors.lightGray,
                         onClick: () {
-                          ButtonFunctions.onNumberSectionClicked(
-                            allIndex: (rowIndex * 3 + index),
-                          );
+                          // ButtonFunctions.onNumberSectionClicked(
+                          //   allIndex: (rowIndex * 3 + index),
+                          // );
                         },
                         child: ConstantWidgets.text(context, CalculatorWidgetsData.numbersKeys[(rowIndex * 3 + index)]['name'].toString(),
                             color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500))),

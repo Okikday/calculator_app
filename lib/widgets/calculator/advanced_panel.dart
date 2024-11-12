@@ -125,7 +125,7 @@ class NavigationFuncSection extends StatelessWidget {
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     GestureDetector(
-                      onTap: ButtonFunctions.moveCursorLeft,
+                      // onTap: ButtonFunctions.moveCursorLeft,
                       child: Image.asset(
                         "assets/icons/left_nav_icon.png",
                         width: width * 0.95 * 0.28,
@@ -133,7 +133,7 @@ class NavigationFuncSection extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: ButtonFunctions.moveCursorRight,
+                      // onTap: ButtonFunctions.moveCursorRight,
                       child: Image.asset(
                         "assets/icons/right_nav_icon.png",
                         width: width * 0.95 * 0.28,
@@ -186,14 +186,16 @@ class AdvancedKeysGridView extends StatelessWidget {
                   shape: rowIndex == 2 && i == 3 ? null : const CircleBorder(),
                   borderRadius: 8,
                   backgroundColor: rowIndex == 2 && i == 3 ? CalculatorColors.lavender : CalculatorColors.lightGray,
-                  onClick: () => ButtonFunctions.onAdvancedSectionClicked(rowIndex * 4 + i + 1),
+                  onClick: () {
+                    // ButtonFunctions.onAdvancedSectionClicked(rowIndex * 4 + i);
+                  },
                   child: rowIndex == 2 && i == 3
                       ? RichText(
                           text: const TextSpan(text: "S⇔D", style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),
                         )
                       : RichText(
                           text: TextSpan(
-                              text: CalculatorWidgetsData.advancedPanelKeys[rowIndex * 4 + i + 1]['name'],
+                              text: CalculatorWidgetsData.advancedPanelKeys[rowIndex * 4 + i]['name'],
                               style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),
                         ),
                 )

@@ -5,12 +5,12 @@ import 'dart:ui';
 import 'package:calculator_app/common/colors.dart';
 import 'package:calculator_app/common/constant_widgets.dart';
 import 'package:calculator_app/widgets/calculator/states/display_panel_state.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
+import 'package:super_editor/super_editor.dart';
 
 class DisplayPanel extends StatelessWidget {
   final double height;
@@ -48,7 +48,12 @@ class DisplayPanel extends StatelessWidget {
             child: Row(
               children: [
                 ConstantWidgets.text(context, "= ", fontSize: 32),
-                Expanded(child: Obx(() => Align(alignment: Alignment.centerRight, child: FittedBox(child: ConstantWidgets.text(context, displayPanelState.evalExprResult.value, align: TextAlign.end, fontSize: 32, color: CalculatorColors.lightGray)))))
+                Expanded(
+                    child: Obx(() => Align(
+                        alignment: Alignment.centerRight,
+                        child: FittedBox(
+                            child: ConstantWidgets.text(context, displayPanelState.evalExprResult.value,
+                                align: TextAlign.end, fontSize: 32, color: CalculatorColors.lightGray)))))
               ],
             ),
           )
@@ -57,6 +62,9 @@ class DisplayPanel extends StatelessWidget {
     );
   }
 }
+
+
+
 
 class InputTextField extends StatelessWidget {
   static EditableTextState? editableTextState;

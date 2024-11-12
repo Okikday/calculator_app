@@ -36,7 +36,9 @@ class SignsSection extends StatelessWidget {
                   pixelWidth: aspectRatio >= 0.56 ? width * 0.65 : width * 0.75,
                   backgroundColor: Colors.white,
                   shape: const CircleBorder(),
-                  onClick: () => ButtonFunctions.onSignsSectionClicked(index: index,),
+                  onClick: () {
+                    // ButtonFunctions.onSignsSectionClicked(index: index,);
+                  },
                   child: ConstantWidgets.text(context, CalculatorWidgetsData.signsKeys[index]['name'], color: Colors.black, fontSize: 32, fontWeight: FontWeight.w600),
                 );
             }),

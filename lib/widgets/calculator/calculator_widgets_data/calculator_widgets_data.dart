@@ -25,12 +25,11 @@ static List<Map<String, dynamic>> advancedPanelKeys = [
   {
     'name': "%",
     'inputAs': "%",
-    'evalAs': "%" // Assuming the MathExpressions package can handle modulus directly
+    'evalAs': "%"
   },
   {
     'name': "hyp",
-    'inputAs': "hyp(",
-    'evalAs': "hypot" // Assuming hypot is supported; adjust if needed
+    'onClick': (){}
   },
   {
     'name': "x\u02B8", // Superscript y for x^y (ʸ)
@@ -41,11 +40,6 @@ static List<Map<String, dynamic>> advancedPanelKeys = [
     'name': "x\u207B\u00B9", // Superscript -1 for x^-1 (⁻¹)
     'inputAs': "^-1",
     'evalAs': "^-1"
-  },
-  {
-    'name': "log\u2093y", // Log base x of y with x in subscript (ₓ)
-    'inputAs': "log(",
-    'evalAs': "log" // This may need a dynamic approach if base changes
   },
   {
     'name': "sin",
@@ -91,6 +85,11 @@ static List<Map<String, dynamic>> advancedPanelKeys = [
     'name': "\u03C0", // Pi symbol (π)
     'inputAs': "π",
     'evalAs': "pi" // Constant Pi
+  },
+  {
+    'name': "log\u2093y", // Log base x of y with x in subscript (ₓ)
+    'inputAs': "log(",
+    'evalAs': "log" // This may need a dynamic approach if base changes
   },
   {
     'name': "asin",
