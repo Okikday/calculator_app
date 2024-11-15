@@ -37,17 +37,8 @@ class EditableTextWidget {
   // Initialize controllers for managing field elements and positioning
   void createControllers() {}
 
-  // Adds a special input with positioning and custom configuration
-  void addSpecialInput({
-    required String name,
-    required List<TextFieldPlacement> placements,
-  }) {}
-
-  void addNormalInput(
-    String content,
-  ) {
-    final TextEditingController controller = backController;
-    int cursorOffset = controller.selection.baseOffset;
+  void _addNormalTextInput(String content, {required TextEditingController controller}){
+      int cursorOffset = controller.selection.baseOffset;
     if (cursorOffset == -1) cursorOffset = controller.text.length;
 
     controller.text = controller.text.replaceRange(
@@ -59,8 +50,44 @@ class EditableTextWidget {
     controller.selection = TextSelection.fromPosition(
       TextPosition(offset: cursorOffset + content.length),
     );
+  }
+
+  void _addSpecialTextInput(String content, {required TextEditingController controller}){
+
+  }
+
+  void addTextInput(
+    String content,
+    {
+      Map<TextFieldPlacement, String>? textsAndPlacements
+    }
+  ) {
+    final TextEditingController controller = backController;
+    if(textsAndPlacements == null || textsAndPlacements.isEmpty){
+    _addNormalTextInput(content, controller: controller);
+    }else if(textsAndPlacements.isNotEmpty){
+      _addSpecialTextInput(content, controller: controller);
+    }
     log("Offset: ${HelperFunctions.measureTextWidth(content, TextStyle(fontSize: height * 0.8, color: Colors.white))}");
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Deletes content based on cursor position and element positioning
   void delCharacter() {}
@@ -130,22 +157,6 @@ class EditableTextWidget {
       ),
     );
   }
-}
-
-class TextModel{
-  final String text;
-  final Map<TextFieldPlacement, String>? placementsAndTexts;
-
-  const TextModel({
-    required this.text,
-    this.placementsAndTexts,
-
-  });
-
-  factory TextModel.fromMap(Map<String, dynamic> json){
-    return TextModel(text: json['text'], placementsAndTexts: json['placementsAndTexts']);
-  }
-
 }
 
 class SampleData{

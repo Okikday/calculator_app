@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+
     final EditableTextWidget editableTextWidget = EditableTextWidget();
 
     return MaterialApp(
@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
           children: [
             Center(child: editableTextWidget.containerWidget()),
             const SizedBox(height: 24),
-            CustomElevatedButton(onClick: () => editableTextWidget.addNormalInput("A"), label: "Input A", textSize: 16, backgroundColor: Colors.lightBlue,),
+            CustomElevatedButton(onClick: () => editableTextWidget.addTextInput("A"), label: "Input A", textSize: 16, backgroundColor: Colors.lightBlue,),
             const SizedBox(height: 16),
-            CustomElevatedButton(onClick: () => editableTextWidget.addNormalInput("B"), label: "Input B", textSize: 16,),
+            CustomElevatedButton(onClick: () => editableTextWidget.addTextInput("B"), label: "Input B", textSize: 16,),
             const SizedBox(height: 16),
             CustomElevatedButton(onClick: () => editableTextWidget.clearAll(), label: "Clear textbox", textSize: 16, backgroundColor: Colors.yellow, textColor: Colors.black,)
           ],
