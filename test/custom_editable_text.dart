@@ -23,6 +23,9 @@ class CustomEditableText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    customEditableTextController.setContainerSize(Size(width, height));
+
     return Container(
         decoration: BoxDecoration(
           color: Colors.lightBlue.withOpacity(0.1),
@@ -37,21 +40,21 @@ class CustomEditableText extends StatelessWidget {
                 tapOffset: details.localPosition,
                 scrollOffset: customEditableTextController.scrollController.value.offset,
                 textWidths: customEditableTextController.textWidths,
-                containerHeight: 100,
-                containerWidth: 400,
+                containerHeight: height,
+                containerWidth: width,
               ));
 
               // Auto-scroll ListView if near edges
-              CustomEditableTextFunctions.handlePointerMovement(details.localPosition, customEditableTextController.scrollController.value, 400, customEditableTextController.textWidths);
+              CustomEditableTextFunctions.handlePointerMovement(details.localPosition, customEditableTextController.scrollController.value, width, customEditableTextController.textWidths);
             },
             onTapDown: (details) {
-              log("Horizontal update");
+              log(CustomEditableTextFunctions.getCursorOffset(textWidths: customEditableTextController.textWidths, scrollOffset: customEditableTextController.scrollController.value.offset, containerWidth: width, tapOffset: details.localPosition).toString());
               customEditableTextController.setCursorPosition(CustomEditableTextFunctions.getCursorPosition(
                 tapOffset: details.localPosition,
                 scrollOffset: customEditableTextController.scrollController.value.offset,
                 textWidths: customEditableTextController.textWidths,
-                containerHeight: 100,
-                containerWidth: 400,
+                containerHeight: height,
+                containerWidth: width,
               ));
             },
             child: Stack(

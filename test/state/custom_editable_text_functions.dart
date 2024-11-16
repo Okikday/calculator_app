@@ -62,42 +62,91 @@ class CustomEditableTextFunctions {
     return Offset(cursorX, containerHeight * 0.05);
   }
 
-static void handlePointerMovement(
-    Offset tapOffset, 
-    ScrollController scrollController, 
+  static void handlePointerMovement(
+    Offset tapOffset,
+    ScrollController scrollController,
     double containerWidth,
     List<double> textWidths,
-) {
-  const double edgeThreshold = 40.0; // Distance from edges to start scrolling
-  const double scrollAmount = 10.0; // Amount to scroll per tick
+  ) {
+    // Calculate the total width of all text elements
+    final totalTextWidth = textWidths.fold(0.0, (sum, width) => sum + width);
+    final double edgeThreshold = containerWidth * 0.1; // Distance from edges to start scrolling
+    final double scrollAmount = totalTextWidth/textWidths.length; // Amount to scroll per tick, that is average
+    final maxOffset = (totalTextWidth - containerWidth + edgeThreshold / 2).clamp(0.0, double.infinity);
 
-  // Calculate the total width of all text elements
-  final totalTextWidth = textWidths.fold(0.0, (sum, width) => sum + width);
+    void scrollAnimateTo(double value) => scrollController.animateTo(value, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
 
-  if (tapOffset.dx < edgeThreshold) {
-    // Near the left edge, scroll left
-    final targetOffset = (scrollController.offset - scrollAmount - edgeThreshold/2).clamp(0.0, totalTextWidth - containerWidth);
-    scrollController.jumpTo(targetOffset);
-  } else if (tapOffset.dx > containerWidth - edgeThreshold) {
-    // Near the right edge, scroll right
-    final maxOffset = (totalTextWidth - containerWidth - edgeThreshold/2).clamp(0.0, double.infinity);
-    final targetOffset = (scrollController.offset + scrollAmount).clamp(0.0, maxOffset);
-    scrollController.jumpTo(targetOffset + edgeThreshold);
+    if (tapOffset.dx <= edgeThreshold) {
+      // Near the left edge, scroll left
+      final targetOffset = (scrollController.offset - scrollAmount).clamp(0.0, totalTextWidth - containerWidth < 0 ? 1.0 : totalTextWidth - containerWidth);
+      
+      // Ensure visibility of the cursor at the beginning
+      if (targetOffset.truncate() <= 0.0.truncate()) {
+        // Align the cursor to the beginning of the visible area
+        if (scrollController.offset <= edgeThreshold/2) {
+          customEditableTextController.setCursorPosition(Offset.zero);
+        } else {
+          customEditableTextController.setCursorPosition(Offset.zero);
+          scrollAnimateTo(0);
+        }
+      } else {
+        scrollAnimateTo(0);
+      }
+    } else if (tapOffset.dx >= containerWidth - edgeThreshold) {
+      log("maxScrollExtent: ${scrollController.position.maxScrollExtent}");
+      // Near the right edge, scroll right
+      // Adjust maxOffset to ensure the last character and cursor are fully visible
+      final targetOffset = (scrollController.offset + scrollAmount).clamp(0.0, maxOffset);
 
-    // Handle the case where the last text element on the right is encountered
-    if (scrollController.offset >= maxOffset - scrollAmount) {
-      customEditableTextController.setCursorPosition(const Offset(380, 0));
+      // Ensure visibility of the cursor at the end
+      if (targetOffset >= maxOffset) {
+        // Align the cursor to the end of the visible area
+        if (maxOffset >= scrollController.position.maxScrollExtent) {
+          customEditableTextController.setCursorPosition(Offset(containerWidth - 20, 0));
+          if(scrollController.offset != scrollController.position.maxScrollExtent){
+            scrollAnimateTo(maxOffset);
+          }
+        } else {
+          customEditableTextController.setCursorPosition(Offset(containerWidth - 20, 0));
+          scrollAnimateTo(maxOffset);
+        }
+      } else {
+        scrollAnimateTo(maxOffset);
+        
+      }
+    } else {
+      
+        // Ensure the offset stays within bounds
+      final targetOffset = scrollController.offset.clamp(0.0, totalTextWidth - containerWidth < 0 ? 1.0 : totalTextWidth - containerWidth);
+      scrollAnimateTo(targetOffset);
+      
     }
-  } else {
-    // Ensure the offset stays within bounds
-    final targetOffset = scrollController.offset.clamp(0.0, totalTextWidth - containerWidth);
-    scrollController.jumpTo(targetOffset);
   }
-}
 
+  /// Calculates the cursor offset based on the text widths, tap position, and visible container dimensions.
+  static int getCursorOffset({
+    required List<double> textWidths,
+    required double scrollOffset,
+    required double containerWidth,
+    required Offset tapOffset,
+  }) {
+    double cumulativeWidth = 0.0;
 
+    // Adjust the tap position to account for the scroll offset
+    final adjustedTapX = tapOffset.dx + scrollOffset;
 
+    for (int i = 0; i < textWidths.length; i++) {
+      cumulativeWidth += textWidths[i];
 
+      // Check if the adjusted tap position falls within the bounds of the current character
+      if (cumulativeWidth >= adjustedTapX) {
+        return i; // Return the index of the character
+      }
+    }
+
+    // If no match is found, default to the last character
+    return textWidths.length - 1;
+  }
 
 // static void ensureCursorVisibility({
 //   required double cursorX,
@@ -116,6 +165,4 @@ static void handlePointerMovement(
 //     scrollController.jumpTo((cursorX - containerWidth).clamp(0.0, scrollController.position.maxScrollExtent));
 //   }
 // }
-
-
 }

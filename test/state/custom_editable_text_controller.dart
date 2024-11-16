@@ -9,29 +9,18 @@ import 'custom_editable_text_functions.dart';
 final CustomEditableTextController customEditableTextController = Get.put<CustomEditableTextController>(CustomEditableTextController());
 
 class CustomEditableTextController extends GetxController {
-  Rx<TextStyle> customTextStyle = const TextStyle(fontSize: 100 * 0.8, color: Colors.white).obs;
+  Rx<TextStyle> customTextStyle = const TextStyle(fontSize: 50 * 0.8, color: Colors.white).obs;
   final Rx<ScrollController> scrollController = ScrollController().obs;
 
   RxList<CustomTextElementModel> allElements = <CustomTextElementModel>[].obs;
   RxList<double> textWidths = <double>[].obs;
   Rx<Offset> cursorPosition = const Offset(0, 0).obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Listen to scroll changes
-    // scrollController.value.addListener(() {
-    //   // final newCursorPosition = CustomEditableTextFunctions.getCursorPosition(
-    //   //   tapOffset: Offset.zero, // Base offset for recalculating with the scroll
-    //   //   scrollOffset: scrollController.value.offset,
-    //   //   textWidths: customEditableTextController.textWidths,
-    //   //   containerHeight: 100,
-    //   //   containerWidth: 400,
-    //   // );
+  Rx<Size> containerSize = const Size(200, 50).obs;
 
-    //   // // Update the cursor position as you scroll
-    //   // customEditableTextController.setCursorPosition(newCursorPosition);
-    // });
+  setContainerSize(Size size){
+    containerSize.value = size;
+    customTextStyle.value = customTextStyle.value.copyWith(fontSize: size.height * 0.8);
   }
 
 
@@ -48,11 +37,12 @@ class CustomEditableTextController extends GetxController {
 
   void updateScrollPosition() {
     final double totalWidth = textWidths.fold(0.0, (sum, width) => sum + width);
-    log("totalWidth: $totalWidth");
-    if (totalWidth > 400) {
-      scrollController.value.jumpTo(totalWidth - 400 + textWidths[textWidths.length - 1]);
+    log("totalWidth: $totalWidth, maxScrollExtent: ${scrollController.value.position.maxScrollExtent}, scrollOffset: ${scrollController.value.offset}");
+    if (totalWidth > 380) {
+      scrollController.value.animateTo(totalWidth - containerSize.value.width + 20, duration: const Duration(milliseconds: 150), curve: Curves.decelerate);
     }
-    setCursorPosition(Offset(textWidths.fold(0.0, (sum, width) => sum + width > 400 ? 380 : sum + width), 0));
+
+    setCursorPosition(Offset(textWidths.fold(0.0, (sum, width) => sum + width > containerSize.value.width ? 380 : sum + width), 0));
   }
 
   // Add a text or special text to the list
