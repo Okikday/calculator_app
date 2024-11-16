@@ -15,61 +15,89 @@ class CustomEditableText extends StatelessWidget {
     super.key,
     this.height = 100,
     this.width = 400,
-    this.textStyle = const TextStyle(fontSize: 100 * 0.8, color: Colors.white,),
+    this.textStyle = const TextStyle(
+      fontSize: 100 * 0.8,
+      color: Colors.white,
+    ),
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-          decoration: BoxDecoration(
-            color: Colors.lightBlue.withOpacity(0.1),
-          ),
-          height: height,
-          width: width,
-          clipBehavior: Clip.hardEdge,
-          child: GestureDetector(
+        decoration: BoxDecoration(
+          color: Colors.lightBlue.withOpacity(0.1),
+        ),
+        height: height,
+        width: width,
+        clipBehavior: Clip.hardEdge,
+        child: Obx(
+          () => GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              customEditableTextController.setCursorPosition(CustomEditableTextFunctions.getCursorPosition(
+                tapOffset: details.localPosition,
+                scrollOffset: customEditableTextController.scrollController.value.offset,
+                textWidths: customEditableTextController.textWidths,
+                containerHeight: 100,
+                containerWidth: 400,
+              ));
+
+              // Auto-scroll ListView if near edges
+              CustomEditableTextFunctions.handlePointerMovement(details.localPosition, customEditableTextController.scrollController.value, 400, customEditableTextController.textWidths);
+            },
             onTapDown: (details) {
-              log(details.toString());
+              log("Horizontal update");
+              customEditableTextController.setCursorPosition(CustomEditableTextFunctions.getCursorPosition(
+                tapOffset: details.localPosition,
+                scrollOffset: customEditableTextController.scrollController.value.offset,
+                textWidths: customEditableTextController.textWidths,
+                containerHeight: 100,
+                containerWidth: 400,
+              ));
             },
             child: Stack(
               children: [
-                Obx(() => ListView.builder(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: customEditableTextController.allElements.length,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final element = customEditableTextController.allElements[index];
-                        log("element: $element");
-                        if (customEditableTextController.allElements.isEmpty) {
-                          return const SizedBox(
-                            child: Text(
-                              "Empty rn",
-                              style: TextStyle(color: Colors.red, fontSize: 16),
-                            ),
-                          );
-                        } 
-                        if(element is String) {
-                          return CustomEditableTextFunctions.makeNormalTextWidget(text: element, textStyle: textStyle);
-                        }
+                ListView.builder(
+                    padding: EdgeInsets.zero,
+                    scrollDirection: Axis.horizontal,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: customEditableTextController.allElements.length,
+                    controller: customEditableTextController.scrollController.value,
+                    itemBuilder: (context, index) {
+                      final element = customEditableTextController.allElements[index];
+                      if (customEditableTextController.allElements.isEmpty) {
                         return const SizedBox(
-                            child: Text(
-                              "Default Text",
-                              style: TextStyle(color: Colors.yellow, fontSize: 16),
-                            ),
-                          );
-                      }),
-                ),
+                          child: Text(
+                            "Empty rn",
+                            style: TextStyle(color: Colors.red, fontSize: 16),
+                          ),
+                        );
+                      }
+                      if (element.extraTexts == null) {
+                        return CustomEditableTextFunctions.makeNormalTextWidget(customText: element);
+                      }
+                      return const SizedBox(
+                        child: Text(
+                          "Default Text",
+                          style: TextStyle(color: Colors.yellow, fontSize: 16),
+                        ),
+                      );
+                    }),
 
                 //Cursor
                 // height prone to change
-                Container(
-                  width: 2,
-                  height: height * 0.95,
-                  color: Colors.orange,
-                )
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.decelerate,
+                  left: customEditableTextController.cursorPosition.value.dx,
+                  child: Container(
+                    width: 2,
+                    height: height * 0.95,
+                    color: Colors.orange,
+                  ),
+                ),
               ],
             ),
-          ));
+          ),
+        ));
   }
 }

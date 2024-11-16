@@ -1,4 +1,5 @@
 import '../state/custom_editable_text_controller.dart';
+import 'package:flutter/widgets.dart';
 
 class SampleData {
   List<Map<String, dynamic>> keys = [
@@ -10,11 +11,11 @@ class SampleData {
     },
     {
       'text': "C",
-      'placementsAndTexts': {TextFieldPlacement.centerLeft: "1", TextFieldPlacement.centerRight: "2"}
+      'placementsAndTexts': {Alignment.centerLeft: "1", Alignment.centerRight: "2"}
     },
     {
       'text': "D",
-      'placementsAndTexts': {TextFieldPlacement.centerLeft: "3", TextFieldPlacement.centerRight: "4"}
+      'placementsAndTexts': {Alignment.centerLeft: "3", Alignment.centerRight: "4"}
     },
   ];
 }
