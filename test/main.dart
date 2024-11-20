@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'custom_editable_text.dart';
 import 'models/custom_text_element_model.dart';
 import 'state/custom_editable_text_controller.dart';
-import 'state/custom_editable_text_functions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,20 +31,15 @@ class MyApp extends StatelessWidget {
             const SizedBox(height: 24),
             CustomElevatedButton(
               onClick: () => customEditableTextController.updateTextElement(
-                  customText: CustomTextElementModel(text: "A"),
-                  index: CustomEditableTextFunctions.getCursorOffset(
-                      textWidths: customEditableTextController.textWidths,
-                      scrollOffset: customEditableTextController.scrollController.value.offset,
-                      containerWidth: customEditableTextController.containerSize.value.width,
-                      tapOffset: 
-                      )),
+                  customText: CustomTextElementModel(text: "A"), index: customEditableTextController.cursorOffset.value),
               label: "Input A",
               textSize: 16,
               backgroundColor: Colors.lightBlue,
             ),
             const SizedBox(height: 16),
             CustomElevatedButton(
-              onClick: () => customEditableTextController.updateTextElement(customText: CustomTextElementModel(text: "B")),
+              onClick: () => customEditableTextController.updateTextElement(
+                  customText: CustomTextElementModel(text: "B"), index: customEditableTextController.cursorOffset.value),
               label: "Input B",
               textSize: 16,
             ),

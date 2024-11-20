@@ -130,6 +130,8 @@ class CustomEditableTextFunctions {
     required double containerWidth,
     required Offset tapOffset,
   }) {
+    if(textWidths.isEmpty) return 0;
+    
     double cumulativeWidth = 0.0;
 
     // Adjust the tap position to account for the scroll offset

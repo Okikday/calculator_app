@@ -15,17 +15,18 @@ class CustomEditableTextController extends GetxController {
   RxList<CustomTextElementModel> allElements = <CustomTextElementModel>[].obs;
   RxList<double> textWidths = <double>[].obs;
   Rx<Offset> cursorPosition = const Offset(0, 0).obs;
+  RxInt cursorOffset = 0.obs;
 
   Rx<Size> containerSize = const Size(200, 50).obs;
 
-  setContainerSize(Size size){
+  setContainerSize(Size size) {
     containerSize.value = size;
     customTextStyle.value = customTextStyle.value.copyWith(fontSize: size.height * 0.8);
   }
 
-
   setGeneralTextStyle(TextStyle textStyle) => customTextStyle.value = textStyle;
   setCursorPosition(Offset position) => cursorPosition.value = position;
+  setCursorOffset(int offset) => cursorOffset.value = offset;
 
   updateTextWidths() {
     textWidths.value = List.generate(allElements.length, (i) => i.toDouble());
@@ -35,23 +36,31 @@ class CustomEditableTextController extends GetxController {
     }
   }
 
-  void updateScrollPosition() {
-    final double totalWidth = textWidths.fold(0.0, (sum, width) => sum + width);
-    log("totalWidth: $totalWidth, maxScrollExtent: ${scrollController.value.position.maxScrollExtent}, scrollOffset: ${scrollController.value.offset}");
-    if (totalWidth > 380) {
-      scrollController.value.animateTo(totalWidth - containerSize.value.width + 20, duration: const Duration(milliseconds: 150), curve: Curves.decelerate);
-    }
+  void updateCursorScrollPos() {
 
-    setCursorPosition(Offset(textWidths.fold(0.0, (sum, width) => sum + width > containerSize.value.width ? 380 : sum + width), 0));
+    final double totalWidth = textWidths.fold(0.0, (sum, width) => sum + width);
+    final bool isCursorPosLast = cursorPosition.value.dx + textWidths[cursorOffset.value] > containerSize.value.width;
+    final double cursorPosLast = textWidths.fold(0.0, (sum, width) => sum + width > containerSize.value.width ? containerSize.value.width - 2 : sum + width);
+    final double cursorPosNotLast = cursorPosition.value.dx + textWidths[cursorOffset.value] > containerSize.value.width ? containerSize.value.width - 20 : cursorPosition.value.dx + textWidths[cursorOffset.value];
+
+    setCursorPosition(Offset(cursorOffset.value == textWidths.length ? cursorPosLast : cursorPosNotLast, 0));
+    cursorOffset++;
+    
+    if (totalWidth > 380) {
+      scrollController.value.animateTo(totalWidth - containerSize.value.width + 15, duration: const Duration(milliseconds: 150), curve: Curves.decelerate);
+    }
+    log("cursorOffset: ${cursorOffset.value}, cursorPosition: ${cursorPosition.value}");
+    log("totalWidth: $totalWidth, maxScrollExtent: ${scrollController.value.position.maxScrollExtent}, scrollOffset: ${scrollController.value.offset}");
+    
   }
 
   // Add a text or special text to the list
   void updateTextElement({
     required CustomTextElementModel customText,
-    int? index,
+    required int index,
   }) {
     if (customText.text.isNotEmpty) {
-      if (index == null || index == allElements.length) {
+      if (index == allElements.length) {
         allElements.add(customText);
       } else {
         if (index >= 0 && index < allElements.length) {
@@ -60,9 +69,8 @@ class CustomEditableTextController extends GetxController {
       }
     }
     updateTextWidths();
-    updateScrollPosition();
-    
-    
+    updateCursorScrollPos();
+
     // log(allElements.map((e) => e.toJson()).toString());
     log(textWidths.toString());
   }
@@ -71,6 +79,8 @@ class CustomEditableTextController extends GetxController {
     allElements.clear();
     textWidths.clear();
     setCursorPosition(Offset(textWidths.fold(0.0, (sum, width) => sum + width), 0));
+    setCursorOffset(0);
+
     log(allElements.toString());
   }
 }

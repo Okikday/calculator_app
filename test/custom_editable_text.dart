@@ -23,7 +23,6 @@ class CustomEditableText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     customEditableTextController.setContainerSize(Size(width, height));
 
     return Container(
@@ -43,12 +42,19 @@ class CustomEditableText extends StatelessWidget {
                 containerHeight: height,
                 containerWidth: width,
               ));
+              
+              customEditableTextController.setCursorOffset(CustomEditableTextFunctions.getCursorOffset(
+                      textWidths: customEditableTextController.textWidths,
+                      scrollOffset: customEditableTextController.scrollController.value.offset,
+                      containerWidth: width,
+                      tapOffset: customEditableTextController.cursorPosition.value));
 
               // Auto-scroll ListView if near edges
-              CustomEditableTextFunctions.handlePointerMovement(details.localPosition, customEditableTextController.scrollController.value, width, customEditableTextController.textWidths);
+              CustomEditableTextFunctions.handlePointerMovement(
+                  details.localPosition, customEditableTextController.scrollController.value, width, customEditableTextController.textWidths);
+              log("HorizontalDrag:\n    cursorOffset: ${customEditableTextController.cursorOffset.value}, cursorPosition: ${customEditableTextController.cursorPosition.value}");
             },
             onTapDown: (details) {
-              log(CustomEditableTextFunctions.getCursorOffset(textWidths: customEditableTextController.textWidths, scrollOffset: customEditableTextController.scrollController.value.offset, containerWidth: width, tapOffset: details.localPosition).toString());
               customEditableTextController.setCursorPosition(CustomEditableTextFunctions.getCursorPosition(
                 tapOffset: details.localPosition,
                 scrollOffset: customEditableTextController.scrollController.value.offset,
@@ -56,6 +62,12 @@ class CustomEditableText extends StatelessWidget {
                 containerHeight: height,
                 containerWidth: width,
               ));
+              customEditableTextController.setCursorOffset(CustomEditableTextFunctions.getCursorOffset(
+                      textWidths: customEditableTextController.textWidths,
+                      scrollOffset: customEditableTextController.scrollController.value.offset,
+                      containerWidth: width,
+                      tapOffset: customEditableTextController.cursorPosition.value));
+                      log("TapDown:\n    cursorOffset: ${customEditableTextController.cursorOffset.value}, cursorPosition: ${customEditableTextController.cursorPosition.value}");
             },
             child: Stack(
               children: [
