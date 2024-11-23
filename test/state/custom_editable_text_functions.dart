@@ -32,35 +32,77 @@ class CustomEditableTextFunctions {
     return SizedBox();
   }
 
-  static Offset getCursorPosition({
-    required Offset tapOffset,
-    required List<double> textWidths,
-    required double containerHeight,
-    required double scrollOffset,
-    required double containerWidth,
-  }) {
-    double cumulativeWidth = 0;
+static Offset getCursorPosition({
+  required Offset tapOffset,
+  required List<double> textWidths,
+  required double containerHeight,
+  required double scrollOffset,
+  required double containerWidth,
+}) {
+  double cumulativeWidth = 0;
 
-    // Adjust the tapOffset.dx by adding the scrollOffset
-    double adjustedTapX = tapOffset.dx + scrollOffset;
+  // Adjust the tapOffset.dx by adding the scrollOffset
+  double adjustedTapX = tapOffset.dx + scrollOffset;
 
-    for (int i = 0; i < textWidths.length; i++) {
-      final elementWidth = textWidths[i];
+  for (int i = 0; i < textWidths.length; i++) {
+    final elementWidth = textWidths[i];
 
-      // Check if the adjusted tap is within the bounds of the current text element
-      if (adjustedTapX <= cumulativeWidth + elementWidth) {
-        // Ensure the cursor position is clamped within visible bounds
-        double cursorX = (cumulativeWidth - scrollOffset).clamp(0.0, containerWidth);
-        return Offset(cursorX, containerHeight * 0.05);
+    // Check if the adjusted tap is within the bounds of the current text element
+    if (adjustedTapX <= cumulativeWidth + elementWidth) {
+      if (i == textWidths.length - 1) {
+        // If in the right half of the last character, snap to the end position
+        if (adjustedTapX > cumulativeWidth + elementWidth / 2) {
+          double cursorX = (cumulativeWidth + elementWidth - scrollOffset)
+              .clamp(0.0, containerWidth - (containerWidth * 0.01));
+          return Offset(cursorX, containerHeight * 0.05);
+        }
       }
 
-      cumulativeWidth += elementWidth;
+      // Otherwise, position the cursor normally
+      double cursorX = (cumulativeWidth - scrollOffset).clamp(0.0, containerWidth - (containerWidth * 0.01));
+      return Offset(cursorX, containerHeight * 0.05);
     }
 
-    // Default: Place the cursor at the end of the visible range
-    double cursorX = (cumulativeWidth - scrollOffset).clamp(0.0, containerWidth);
-    return Offset(cursorX, containerHeight * 0.05);
+    cumulativeWidth += elementWidth;
   }
+
+  // Default: Place the cursor at the end of the visible range
+  double cursorX = (cumulativeWidth - scrollOffset).clamp(0.0, containerWidth - (containerWidth * 0.01));
+  return Offset(cursorX, containerHeight * 0.05);
+}
+
+
+
+
+  // static Offset getCursorPosition({
+  //   required Offset tapOffset,
+  //   required List<double> textWidths,
+  //   required double containerHeight,
+  //   required double scrollOffset,
+  //   required double containerWidth,
+  // }) {
+  //   double cumulativeWidth = 0;
+
+  //   // Adjust the tapOffset.dx by adding the scrollOffset
+  //   double adjustedTapX = tapOffset.dx + scrollOffset;
+
+  //   for (int i = 0; i < textWidths.length; i++) {
+  //     final elementWidth = textWidths[i];
+
+  //     // Check if the adjusted tap is within the bounds of the current text element
+  //     if (adjustedTapX <= cumulativeWidth + elementWidth) {
+  //       // Ensure the cursor position is clamped within visible bounds
+  //       double cursorX = (cumulativeWidth - scrollOffset).clamp(0.0, containerWidth);
+  //       return Offset(cursorX, containerHeight * 0.05);
+  //     }
+
+  //     cumulativeWidth += elementWidth;
+  //   }
+
+  //   // Default: Place the cursor at the end of the visible range
+  //   double cursorX = (cumulativeWidth - scrollOffset).clamp(0.0, containerWidth);
+  //   return Offset(cursorX, containerHeight * 0.05);
+  // }
 
   static void handlePointerMovement(
     Offset tapOffset,
@@ -102,12 +144,12 @@ class CustomEditableTextFunctions {
       if (targetOffset >= maxOffset) {
         // Align the cursor to the end of the visible area
         if (maxOffset >= scrollController.position.maxScrollExtent) {
-          customEditableTextController.setCursorPosition(Offset(containerWidth - 20, 0));
+          customEditableTextController.setCursorPosition(Offset(containerWidth - (containerWidth * 0.01), 0));
           if(scrollController.offset != scrollController.position.maxScrollExtent){
             scrollAnimateTo(maxOffset);
           }
         } else {
-          customEditableTextController.setCursorPosition(Offset(containerWidth - 20, 0));
+          customEditableTextController.setCursorPosition(Offset(containerWidth - (containerWidth * 0.01), 0));
           scrollAnimateTo(maxOffset);
         }
       } else {
@@ -136,16 +178,19 @@ class CustomEditableTextFunctions {
 
     // Adjust the tap position to account for the scroll offset
     final adjustedTapX = tapOffset.dx + scrollOffset;
-
+    
     for (int i = 0; i < textWidths.length; i++) {
       cumulativeWidth += textWidths[i];
 
       // Check if the adjusted tap position falls within the bounds of the current character
       if (cumulativeWidth >= adjustedTapX) {
-        return i; // Return the index of the character
+        if(tapOffset.dx < textWidths[0]){
+          return i;
+        }
+        return i+1; // Return the index of the character
       }
     }
-
+    
     // If no match is found, default to the last character
     return textWidths.length - 1;
   }

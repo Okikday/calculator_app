@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(child: CustomEditableText()),
+            Center(child: CustomEditableText(width: 350,)),
             const SizedBox(height: 24),
             CustomElevatedButton(
               onClick: () => customEditableTextController.updateTextElement(

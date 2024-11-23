@@ -67,7 +67,7 @@ class CustomEditableText extends StatelessWidget {
                       scrollOffset: customEditableTextController.scrollController.value.offset,
                       containerWidth: width,
                       tapOffset: customEditableTextController.cursorPosition.value));
-                      log("TapDown:\n    cursorOffset: ${customEditableTextController.cursorOffset.value}, cursorPosition: ${customEditableTextController.cursorPosition.value}");
+              log("TapDown => cursorOffset: ${customEditableTextController.cursorOffset.value}, cursorPosition: ${customEditableTextController.cursorPosition.value}");
             },
             child: Stack(
               children: [

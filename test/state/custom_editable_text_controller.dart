@@ -39,15 +39,37 @@ class CustomEditableTextController extends GetxController {
   void updateCursorScrollPos() {
 
     final double totalWidth = textWidths.fold(0.0, (sum, width) => sum + width);
-    final bool isCursorPosLast = cursorPosition.value.dx + textWidths[cursorOffset.value] > containerSize.value.width;
-    final double cursorPosLast = textWidths.fold(0.0, (sum, width) => sum + width > containerSize.value.width ? containerSize.value.width - 2 : sum + width);
-    final double cursorPosNotLast = cursorPosition.value.dx + textWidths[cursorOffset.value] > containerSize.value.width ? containerSize.value.width - 20 : cursorPosition.value.dx + textWidths[cursorOffset.value];
+    final double scrollOffset = scrollController.value.offset;
 
-    setCursorPosition(Offset(cursorOffset.value == textWidths.length ? cursorPosLast : cursorPosNotLast, 0));
+    if(totalWidth < containerSize.value.width){
+      final double totalPos = cursorPosition.value.dx + textWidths[cursorOffset.value];
+      final double pos = totalPos > containerSize.value.width ? containerSize.value.width - (containerSize.value.width * 0.01) : totalPos;
+      setCursorPosition(Offset(pos, 0));
+    }
+    
+    if(totalWidth > containerSize.value.width){
+      
+      
+      if(cursorOffset.value.truncate() == textWidths.length - 1){
+        setCursorPosition(Offset(containerSize.value.width - (containerSize.value.width * 0.01), 0));
+      }else{
+        log("They are not equal!");
+        final Offset currCursorPos = CustomEditableTextFunctions.getCursorPosition(tapOffset: cursorPosition.value, textWidths: textWidths, containerHeight: containerSize.value.height, scrollOffset: scrollOffset, containerWidth: containerSize.value.width);
+        setCursorPosition(Offset(currCursorPos.dx + textWidths.last, currCursorPos.dy));
+      }
+      
+
+    }
+
+    
     cursorOffset++;
     
-    if (totalWidth > 380) {
-      scrollController.value.animateTo(totalWidth - containerSize.value.width + 15, duration: const Duration(milliseconds: 150), curve: Curves.decelerate);
+    if (totalWidth > containerSize.value.width) {
+      if(scrollOffset.truncate() <= 0 && cursorOffset <= textWidths.fold(0.0, (sum, width) => sum + width >= containerSize.value.width ? sum : sum)){
+        
+      }else{
+        scrollController.value.animateTo(scrollController.value.position.maxScrollExtent + textWidths.last, duration: const Duration(milliseconds: 150), curve: Curves.decelerate);
+      }
     }
     log("cursorOffset: ${cursorOffset.value}, cursorPosition: ${cursorPosition.value}");
     log("totalWidth: $totalWidth, maxScrollExtent: ${scrollController.value.position.maxScrollExtent}, scrollOffset: ${scrollController.value.offset}");
