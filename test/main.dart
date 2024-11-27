@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             Center(child: CustomEditableText(width: 350,)),
             const SizedBox(height: 24),
             CustomElevatedButton(
-              onClick: () => customEditableTextController.updateTextElement(
+              onClick: () => customEditableTextController.addTextElement(
                   customText: CustomTextElementModel(text: "A"), index: customEditableTextController.cursorOffset.value),
               label: "Input A",
               textSize: 16,
@@ -38,10 +38,18 @@ class MyApp extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             CustomElevatedButton(
-              onClick: () => customEditableTextController.updateTextElement(
+              onClick: () => customEditableTextController.addTextElement(
                   customText: CustomTextElementModel(text: "B"), index: customEditableTextController.cursorOffset.value),
               label: "Input B",
               textSize: 16,
+            ),
+            const SizedBox(height: 16),
+            CustomElevatedButton(
+              onClick: () => customEditableTextController.deleteTextElement(index: customEditableTextController.cursorOffset.value ),
+              label: "Backspace",
+              textSize: 16,
+              backgroundColor: Colors.red,
+              textColor: Colors.black,
             ),
             const SizedBox(height: 16),
             CustomElevatedButton(
@@ -50,6 +58,22 @@ class MyApp extends StatelessWidget {
               textSize: 16,
               backgroundColor: Colors.yellow,
               textColor: Colors.black,
+            ),
+            const SizedBox(height: 24,),
+            CustomElevatedButton(
+              onClick: (){},
+              label: "Move left",
+              textSize: 16,
+              backgroundColor: Colors.blueGrey,
+              textColor: Colors.white,
+            ),
+            const SizedBox(height: 24,),
+            CustomElevatedButton(
+              onClick: (){},
+              label: "Move right",
+              textSize: 16,
+              backgroundColor: Colors.blueGrey,
+              textColor: Colors.white,
             )
           ],
         ),

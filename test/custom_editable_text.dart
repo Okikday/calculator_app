@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import 'state/custom_editable_text_controller.dart';
@@ -35,42 +36,49 @@ class CustomEditableText extends StatelessWidget {
         child: Obx(
           () => GestureDetector(
             onHorizontalDragUpdate: (details) {
-              customEditableTextController.setCursorPosition(CustomEditableTextFunctions.getCursorPosition(
-                tapOffset: details.localPosition,
-                scrollOffset: customEditableTextController.scrollController.value.offset,
-                textWidths: customEditableTextController.textWidths,
-                containerHeight: height,
-                containerWidth: width,
-              ));
-              
-              customEditableTextController.setCursorOffset(CustomEditableTextFunctions.getCursorOffset(
-                      textWidths: customEditableTextController.textWidths,
-                      scrollOffset: customEditableTextController.scrollController.value.offset,
-                      containerWidth: width,
-                      tapOffset: customEditableTextController.cursorPosition.value));
+              // Calculate new scroll position based on the current position and delta
+              final newOffset = customEditableTextController.scrollController.value.offset - details.delta.dx;
 
-              // Auto-scroll ListView if near edges
-              CustomEditableTextFunctions.handlePointerMovement(
-                  details.localPosition, customEditableTextController.scrollController.value, width, customEditableTextController.textWidths);
-              log("HorizontalDrag:\n    cursorOffset: ${customEditableTextController.cursorOffset.value}, cursorPosition: ${customEditableTextController.cursorPosition.value}");
+              // Jump to the new offset clamped within scrollable limits
+              customEditableTextController.scrollController.value.jumpTo(
+                newOffset.clamp(
+                  customEditableTextController.scrollController.value.position.minScrollExtent,
+                  customEditableTextController.scrollController.value.position.maxScrollExtent,
+                ),
+              );
+              // customEditableTextController.setCursorPosition(CustomEditableTextFunctions.getCursorPosition(
+              //   tapOffset: details.localPosition,
+              //   scrollOffset: customEditableTextController.scrollController.value.offset,
+              //   textWidths: customEditableTextController.textWidths,
+              //   containerHeight: height,
+              //   containerWidth: width,
+              // ));
+
+              // customEditableTextController.setCursorOffset(CustomEditableTextFunctions.getCursorOffset(
+              //         textWidths: customEditableTextController.textWidths,
+              //         scrollOffset: customEditableTextController.scrollController.value.offset,
+              //         containerWidth: width,
+              //         tapOffset: customEditableTextController.cursorPosition.value));
+
+              // // Auto-scroll ListView if near edges
+              // CustomEditableTextFunctions.handlePointerMovement(
+              //     details.localPosition, customEditableTextController.scrollController.value, width, customEditableTextController.textWidths);
+              // log("HorizontalDrag:\n    cursorOffset: ${customEditableTextController.cursorOffset.value}, cursorPosition: ${customEditableTextController.cursorPosition.value}");
             },
             onTapDown: (details) {
-              customEditableTextController.setCursorPosition(CustomEditableTextFunctions.getCursorPosition(
-                tapOffset: details.localPosition,
-                scrollOffset: customEditableTextController.scrollController.value.offset,
-                textWidths: customEditableTextController.textWidths,
-                containerHeight: height,
-                containerWidth: width,
-              ));
-              customEditableTextController.setCursorOffset(CustomEditableTextFunctions.getCursorOffset(
-                      textWidths: customEditableTextController.textWidths,
-                      scrollOffset: customEditableTextController.scrollController.value.offset,
-                      containerWidth: width,
-                      tapOffset: customEditableTextController.cursorPosition.value));
-              log("TapDown => cursorOffset: ${customEditableTextController.cursorOffset.value}, cursorPosition: ${customEditableTextController.cursorPosition.value}");
+              log("TapDown => cursorOffset: ${customEditableTextController.cursorOffset.value}");
             },
             child: Stack(
               children: [
+                ListView.builder(
+                    padding: EdgeInsets.only(left: 400),
+                    scrollDirection: Axis.horizontal,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 1,
+                    controller: customEditableTextController.scrollController.value,
+                    itemBuilder: (context, index) {
+                      return CustomEditableTextFunctions.makeCursorWidget(height);
+                    }),
                 ListView.builder(
                     padding: EdgeInsets.zero,
                     scrollDirection: Axis.horizontal,
@@ -97,19 +105,6 @@ class CustomEditableText extends StatelessWidget {
                         ),
                       );
                     }),
-
-                //Cursor
-                // height prone to change
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.decelerate,
-                  left: customEditableTextController.cursorPosition.value.dx,
-                  child: Container(
-                    width: 2,
-                    height: height * 0.95,
-                    color: Colors.orange,
-                  ),
-                ),
               ],
             ),
           ),
