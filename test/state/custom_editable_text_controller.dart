@@ -2,84 +2,104 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../models/custom_text_element_model.dart';
+import '../models/custom_editable_text_models.dart';
 import 'custom_editable_text_functions.dart';
 
 final CustomEditableTextController customEditableTextController = Get.put<CustomEditableTextController>(CustomEditableTextController());
 
 class CustomEditableTextController extends GetxController {
+  // Container properties
   Rx<TextStyle> customTextStyle = const TextStyle(fontSize: 50 * 0.8, color: Colors.white).obs;
+  Rx<Size> containerSize = const Size(200, 50).obs;
+  Rx<CursorModel> fieldCursor = CursorModel(height: 50).obs;
+
   final Rx<ScrollController> scrollController = ScrollController().obs;
+
   RxList<dynamic> allElements = <dynamic>[].obs;
   RxList<double> textWidths = <double>[].obs;
   RxInt cursorOffset = 0.obs;
-
-  Rx<Size> containerSize = const Size(200, 50).obs;
-
-  setContainerSize(Size size, {Size? cursorSize}) {
+  
+  @override
+  void onInit(){
+    super.onInit();
+    setCursorOffset();
+  }
+  initContainerProperties(Size size, {CursorModel? cursor, TextStyle? textStyle}) {
     containerSize.value = size;
-    customTextStyle.value = customTextStyle.value.copyWith(fontSize: size.height * 0.8);
+    cursor == null ? fieldCursor.value = CursorModel(height: size.height) : fieldCursor.value = cursor;
+    textStyle == null ? customTextStyle.value = customTextStyle.value.copyWith(fontSize: size.height * 0.8) : customTextStyle.value = textStyle;
+  }
 
-    if(cursorSize == null){
-
+  setCursorOffset({int? offset}) {
+    if(offset == allElements.length && offset != 0 && offset != null){
+      setCursorOffset(offset: offset-1);
+      return;
     }
-  }
-  setGeneralTextStyle(TextStyle textStyle) => customTextStyle.value = textStyle;
-
-  setCursorOffset(int offset) => allElements.insert(offset, CustomEditableTextFunctions.makeCursorWidget(containerSize.value.height));
-  void updateTextWidths() => textWidths.value = allElements.map((element) {
-
-    return CustomEditableTextFunctions.measureTextSize(element.text, element.textStyle).width;
-  }).toList();
-
-  Future<void> _handleInsertScrollUpdate() async {
-    
+    allElements.removeWhere((item) => item is CursorModel);
+    offset == null || offset == allElements.length ? allElements.add(fieldCursor.value) : allElements.insert(offset, fieldCursor.value);
+    cursorOffset.value = allElements.indexWhere((item) => item is CursorModel);
   }
 
-  Future<void> _handleDeleteScrollUpdate() async {
-    
+  // Update all the element in the allElements width
+  void updateElementsWidth() {
+    if (allElements.isEmpty) return;
+    textWidths.value = allElements.map((element) {
+      return element is CustomTextElementModel
+          ? CustomEditableTextFunctions.measureTextSize(element.text, element.textStyle).width
+          : (element is CursorModel ? element.width : 0.0);
+    }).toList();
   }
+
+  _handleAddScrollUpdate(){
+
+  }
+
+  _handleDeleteScrollUpdate(){
+
+  }
+
+  
 
   // Add a text or special text to the list
   void addTextElement({
     required CustomTextElementModel customText,
     required int index,
   }) {
-    if (customText.text.isNotEmpty) {
-      if (index == allElements.length) {
-        allElements.add(customText);
-      } else {
-        if (index >= 0 && index < allElements.length) {
-          allElements.insert(index, customText);
-        }
-      }
+    if (customText.text.isNotEmpty && index == allElements.length) {
+      allElements.add(customText);
+      setCursorOffset();
+      log("index == allElements.length case: ${cursorOffset.value}");
     }
-    updateTextWidths();
-    _handleInsertScrollUpdate();
+    if (customText.text.isNotEmpty && (index >= 0 && index < allElements.length)) {
+      allElements.insert(index, customText);
+      setCursorOffset();
+      log("index >= 0 && index < allElements.length case: ${cursorOffset.value}");
+    }
+    updateElementsWidth();
   }
 
   // Delete a text element at specified index
   void deleteTextElement({required int index}) {
-    // log("index: $index");
-    // double prevCharWidth = 0;
-    // if (allElements.isEmpty || index == 0) return;
+    log("index: $index");
+    if (allElements.isEmpty || index == 0) return;
 
-    // if (index == allElements.length) {
-    //   prevCharWidth = textWidths.last;
-    //   allElements.removeLast();
-    // }
-    // if (index > 0 && index < allElements.length) {
-    //   prevCharWidth = textWidths[index - 1];
-    //   allElements.removeAt(index - 1);
-    // }
-    // updateTextWidths();
+    if (index == allElements.length) {
+      allElements.removeAt(index - 2);
+      setCursorOffset();
+    }
+    if (index > 0 && index < allElements.length) {
+      allElements.removeAt(index - 1);
+      setCursorOffset(offset: index - 1);
+    }
+    updateElementsWidth();
     // _handleDeleteScrollUpdate();
   }
 
   void clearAllElements() {
     allElements.clear();
     textWidths.clear();
-    log(allElements.toString());
+    setCursorOffset(offset: 0);
+    log(allElements.map((item) => item is CustomTextElementModel ? item.text : "CursorPosition").toList().toString());
   }
 }
 

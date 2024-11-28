@@ -1,11 +1,12 @@
 import 'dart:developer';
 
+import 'package:calculator_app/common/constant_widgets.dart';
 import 'package:calculator_app/common/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'custom_editable_text.dart';
-import 'models/custom_text_element_model.dart';
+import 'models/custom_editable_text_models.dart';
 import 'state/custom_editable_text_controller.dart';
 
 void main() {
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
             const SizedBox(height: 24),
             CustomElevatedButton(
               onClick: () => customEditableTextController.addTextElement(
-                  customText: CustomTextElementModel(text: "A"), index: customEditableTextController.cursorOffset.value),
+                  customText: CustomTextElementModel(text: "A", textStyle: customEditableTextController.customTextStyle.value), index: customEditableTextController.cursorOffset.value),
               label: "Input A",
               textSize: 16,
               backgroundColor: Colors.lightBlue,
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
             const SizedBox(height: 16),
             CustomElevatedButton(
               onClick: () => customEditableTextController.addTextElement(
-                  customText: CustomTextElementModel(text: "B"), index: customEditableTextController.cursorOffset.value),
+                  customText: CustomTextElementModel(text: "B", textStyle: customEditableTextController.customTextStyle.value), index: customEditableTextController.cursorOffset.value),
               label: "Input B",
               textSize: 16,
             ),
@@ -74,7 +75,15 @@ class MyApp extends StatelessWidget {
               textSize: 16,
               backgroundColor: Colors.blueGrey,
               textColor: Colors.white,
-            )
+            ),
+            const SizedBox(height: 24,),
+            CustomElevatedButton(
+              onClick: (){ConstantWidgets.showFlushBar(Get.context!, "Nothing to do");},
+              label: "Random action",
+              textSize: 16,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+            ),
           ],
         ),
       ),

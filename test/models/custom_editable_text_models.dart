@@ -10,7 +10,10 @@ class CustomTextElementModel {
     required this.text,
     this.extraTexts,
     this.extraTextsPlacements,
-    this.textStyle = const TextStyle(fontSize: 100 * 0.8, color: Colors.white,),
+    this.textStyle = const TextStyle(
+      fontSize: 100 * 0.8,
+      color: Colors.white,
+    ),
   });
 
   factory CustomTextElementModel.fromJson(Map<String, dynamic> json) {
@@ -21,11 +24,19 @@ class CustomTextElementModel {
     );
   }
 
-  Map<String, dynamic> toJson(){
+  Map<String, dynamic> toJson() {
     return {
       'text': text,
       'extraTexts': extraTexts,
       'extraTextsPlacements': extraTextsPlacements,
     };
   }
+}
+
+class CursorModel {
+  final double width;
+  final double height;
+  final Color color;
+
+  CursorModel({this.width = 2, required this.height, this.color = Colors.orange});
 }
