@@ -16,6 +16,20 @@ class CustomTextElementModel {
     ),
   });
 
+  CustomTextElementModel copyWith({
+    String? text,
+    List<String>? extraTexts,
+    List<Alignment>? extraTextsPlacements,
+    TextStyle? textStyle,
+  }) {
+    return CustomTextElementModel(
+      text: text ?? this.text,
+      extraTexts: extraTexts ?? this.extraTexts,
+      extraTextsPlacements: extraTextsPlacements ?? this.extraTextsPlacements,
+      textStyle: textStyle ?? this.textStyle,
+    );
+  }
+
   factory CustomTextElementModel.fromJson(Map<String, dynamic> json) {
     return CustomTextElementModel(
       text: json['text'] as String,

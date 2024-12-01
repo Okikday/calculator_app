@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import 'models/custom_editable_text_models.dart';
@@ -24,7 +25,7 @@ class CustomEditableText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    
     customEditableTextController.initContainerProperties(Size(width, height),);
     return Container(
         decoration: BoxDecoration(
@@ -39,7 +40,7 @@ class CustomEditableText extends StatelessWidget {
              
             },
             onTapDown: (details) {
-              final int clickedCursorOffset = CustomEditableTextFunctions.getCursorOffset(containerWidth: width, tapOffset: details.localPosition, textWidths: customEditableTextController.textWidths, scrollOffset: customEditableTextController.scrollController.value.offset,);
+              final int clickedCursorOffset = CustomEditableTextFunctions.getCursorOffset(cursorWidth: customEditableTextController.fieldCursor.value.width, containerWidth: width, tapOffset: details.localPosition, textWidths: customEditableTextController.textWidths, scrollOffset: customEditableTextController.scrollController.value.offset,);
               customEditableTextController.setCursorOffset(offset: clickedCursorOffset);
               log("cursorPosition: ${CustomEditableTextFunctions.getCursorPosition(containerHeight: height, containerWidth: width, tapOffset: details.localPosition, textWidths: customEditableTextController.textWidths, scrollOffset: customEditableTextController.scrollController.value.offset,)}");
               log("textWidths: ${customEditableTextController.textWidths}");
@@ -88,11 +89,5 @@ class CustomEditableText extends StatelessWidget {
             ),
           ),
         ));
-  }
-}
-
-class NoOverscrollBehavior extends ScrollBehavior {
-  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child; // Removes the overscroll glow effect
   }
 }

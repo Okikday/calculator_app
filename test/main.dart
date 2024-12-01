@@ -62,7 +62,9 @@ class MyApp extends StatelessWidget {
             ),
             const SizedBox(height: 24,),
             CustomElevatedButton(
-              onClick: (){},
+              onClick: (){
+                customEditableTextController.moveLeft();
+              },
               label: "Move left",
               textSize: 16,
               backgroundColor: Colors.blueGrey,
@@ -70,7 +72,9 @@ class MyApp extends StatelessWidget {
             ),
             const SizedBox(height: 24,),
             CustomElevatedButton(
-              onClick: (){},
+              onClick: (){
+                customEditableTextController.moveRight();
+              },
               label: "Move right",
               textSize: 16,
               backgroundColor: Colors.blueGrey,

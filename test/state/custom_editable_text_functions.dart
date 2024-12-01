@@ -88,30 +88,55 @@ static int getCursorOffset({
   required double scrollOffset,
   required double containerWidth,
   required Offset tapOffset,
+  required double cursorWidth, // New parameter for cursor width
 }) {
+  // Early return for empty list or invalid input
   if (textWidths.isEmpty) return 0;
 
   double cumulativeWidth = 0.0;
   final adjustedTapX = tapOffset.dx + scrollOffset;
 
   for (int i = 0; i < textWidths.length; i++) {
-    cumulativeWidth += textWidths[i];
+    final charWidth = textWidths[i];
+    
+    // Determine the start and end of the current character
+    final charStart = cumulativeWidth;
+    final charEnd = cumulativeWidth + charWidth;
 
-    if (cumulativeWidth >= adjustedTapX) {
-      final charStart = cumulativeWidth - textWidths[i];
-      final charMid = charStart + textWidths[i] / 2;
-
-      if (adjustedTapX <= charMid) {
-        return i; // Cursor on the left part of the character
-      } else {
-        return (i + 1).clamp(0, textWidths.length); // Cursor on the right part of the character
+    // Special handling for the last two characters
+    if (i >= textWidths.length - 2) {
+      // For the last two characters, adjust the midpoint calculation
+      // This gives more precise control over cursor placement
+      final charMidpoint = charStart + (charWidth * 0.6); // Moved closer to the end
+      
+      if (adjustedTapX >= charStart && adjustedTapX <= charEnd) {
+        if (adjustedTapX < charMidpoint) {
+          return i; // Cursor is to the left of the current character
+        } else {
+          return i + 1; // Cursor is to the right of the current character
+        }
+      }
+    } else {
+      // Standard handling for other characters
+      if (adjustedTapX >= charStart && adjustedTapX <= charEnd) {
+        final charMidpoint = charStart + (charWidth / 2);
+        
+        if (adjustedTapX < charMidpoint) {
+          return i; // Cursor is to the left of the current character
+        } else {
+          return i + 1; // Cursor is to the right of the current character
+        }
       }
     }
+
+    // Move cumulative width forward
+    cumulativeWidth += charWidth;
   }
 
-  // Special case: Tap is beyond the last character
+  // Special case: tap beyond the last visible character
   return textWidths.length;
 }
+
 
 
 }
