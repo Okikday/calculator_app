@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 
 class CustomTextElementModel {
   final String text;
-  final List<String>? extraTexts;
-  final List<Alignment>? extraTextsPlacements;
+  final Map<Alignment, String>? extraTexts;
   final TextStyle textStyle;
 
   CustomTextElementModel({
     required this.text,
     this.extraTexts,
-    this.extraTextsPlacements,
     this.textStyle = const TextStyle(
       fontSize: 100 * 0.8,
       color: Colors.white,
@@ -18,14 +16,13 @@ class CustomTextElementModel {
 
   CustomTextElementModel copyWith({
     String? text,
-    List<String>? extraTexts,
+    Map<Alignment, String>? extraTexts,
     List<Alignment>? extraTextsPlacements,
     TextStyle? textStyle,
   }) {
     return CustomTextElementModel(
       text: text ?? this.text,
-      extraTexts: extraTexts ?? this.extraTexts,
-      extraTextsPlacements: extraTextsPlacements ?? this.extraTextsPlacements,
+      extraTexts: extraTexts,
       textStyle: textStyle ?? this.textStyle,
     );
   }
@@ -33,8 +30,7 @@ class CustomTextElementModel {
   factory CustomTextElementModel.fromJson(Map<String, dynamic> json) {
     return CustomTextElementModel(
       text: json['text'] as String,
-      extraTexts: json['extraTexts'] as List<String>?,
-      extraTextsPlacements: json['extraTextsPlacements'] as List<Alignment>?,
+      extraTexts: json['extraTexts'] as Map<Alignment, String>?,
     );
   }
 
@@ -42,7 +38,6 @@ class CustomTextElementModel {
     return {
       'text': text,
       'extraTexts': extraTexts,
-      'extraTextsPlacements': extraTextsPlacements,
     };
   }
 }

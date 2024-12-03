@@ -30,7 +30,7 @@ class CustomEditableTextController extends GetxController {
   initContainerProperties(Size size, {CursorModel? cursor, TextStyle? textStyle}) {
     containerSize.value = size;
     cursor == null ? fieldCursor.value = CursorModel(height: size.height) : fieldCursor.value = cursor;
-    textStyle == null ? customTextStyle.value = customTextStyle.value.copyWith(fontSize: size.height * 0.8) : customTextStyle.value = textStyle;
+    textStyle == null ? customTextStyle.value = customTextStyle.value.copyWith(fontSize: size.height * 0.7) : customTextStyle.value = textStyle;
     _updateTextStyles();
   }
 
@@ -209,37 +209,47 @@ void _handleDeleteScrollUpdate() {
   }
 
 // FUNCTION:
-  void moveRight() {
-  if (cursorOffset.value >= textWidths.length) return;
-
-  if (textWidths.isEmpty || cursorOffset.value < 0) {
-    setCursorOffset(offset: 0);
+void moveRight() {
+  // Early exit conditions
+  if (textWidths.isEmpty || cursorOffset.value < 0 || cursorOffset.value >= textWidths.length - 1) {
+    setCursorOffset(offset: textWidths.isEmpty ? 0 : textWidths.length - 1);
     return;
   }
 
+  // Calculate cumulative width up to the current cursor position
   double cumulativeWidth = 0.0;
   for (int i = 0; i < cursorOffset.value; i++) {
     cumulativeWidth += textWidths[i];
   }
 
-  final scrollOffset = scrollController.value.offset;
-  final containerWidth = containerSize.value.width;
-  final totalWidth = textWidths.fold(0.0, (sum, width) => sum + width);
+  // Current cursor position details
   final currentCharWidth = textWidths[cursorOffset.value];
   final nextCumulativeWidth = cumulativeWidth + currentCharWidth;
 
-  if (nextCumulativeWidth + fieldCursor.value.width > scrollOffset + containerWidth) {
-    double newOffset = (nextCumulativeWidth + fieldCursor.value.width - containerWidth)
-        .clamp(0.0, totalWidth - containerWidth);
+  // Scroll controller and container details
+  final scrollOffset = scrollController.value.offset;
+  final containerWidth = containerSize.value.width;
+  final totalWidth = textWidths.fold(0.0, (sum, width) => sum + width);
 
-    scrollController.value.jumpTo(newOffset);
-  } else if (nextCumulativeWidth + fieldCursor.value.width >= totalWidth) {
-    // Ensure that we don't lose visibility of the cursor at the end
-    scrollController.value.jumpTo(scrollController.value.position.maxScrollExtent);
+  // Calculate the width of the next character (for positioning)
+  final nextCharWidth = textWidths[cursorOffset.value + 1];
+
+  // Determine scroll behavior
+  double newScrollOffset = scrollOffset;
+  
+  // Check if the next character goes beyond the visible container
+  if (nextCumulativeWidth + fieldCursor.value.width + nextCharWidth > scrollOffset + containerWidth) {
+    // Calculate how much we need to scroll
+    newScrollOffset = (nextCumulativeWidth + fieldCursor.value.width + nextCharWidth - containerWidth)
+        .clamp(0.0, totalWidth - containerWidth);
+    
+    scrollController.value.jumpTo(newScrollOffset);
   }
 
+  // Move cursor to the next position
   setCursorOffset(offset: cursorOffset.value + 1);
 }
+
 
 }
 

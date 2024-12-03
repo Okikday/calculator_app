@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:calculator_app/common/constant_widgets.dart';
 import 'package:calculator_app/common/custom_elevated_button.dart';
@@ -8,12 +7,43 @@ import 'package:get/get.dart';
 import 'custom_editable_text.dart';
 import 'models/custom_editable_text_models.dart';
 import 'state/custom_editable_text_controller.dart';
+import 'state/custom_editable_text_functions.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SpecialTestApp());
 }
 
 final GlobalKey<NavigatorState> globalNavKey = GlobalKey<NavigatorState>();
+
+class SpecialTestApp extends StatelessWidget {
+  const SpecialTestApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      navigatorKey: globalNavKey,
+      home: Scaffold(
+        backgroundColor: Colors.black12,
+        body: Center(
+          child: SizedBox(
+            height: 200,
+            width: 200,
+            child: ColoredBox(
+              color: Colors.yellow,
+              child: CustomEditableTextFunctions.makeSpecialTextWidget(
+                      context,
+                      CustomTextElementModel(
+                          text: "Z",
+                          extraTexts: {Alignment.topRight: "2", Alignment.bottomCenter: "4"},
+                          textStyle: customEditableTextController.customTextStyle.value.copyWith(color: Colors.white, fontSize: 100 * 0.8))) ??
+                  SizedBox(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -28,11 +58,15 @@ class MyApp extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(child: CustomEditableText(width: 350,)),
+            Center(
+                child: CustomEditableText(
+              width: 350,
+            )),
             const SizedBox(height: 24),
             CustomElevatedButton(
               onClick: () => customEditableTextController.addTextElement(
-                  customText: CustomTextElementModel(text: "A", textStyle: customEditableTextController.customTextStyle.value), index: customEditableTextController.cursorOffset.value),
+                  customText: CustomTextElementModel(text: "A", textStyle: customEditableTextController.customTextStyle.value),
+                  index: customEditableTextController.cursorOffset.value),
               label: "Input A",
               textSize: 16,
               backgroundColor: Colors.lightBlue,
@@ -40,13 +74,14 @@ class MyApp extends StatelessWidget {
             const SizedBox(height: 16),
             CustomElevatedButton(
               onClick: () => customEditableTextController.addTextElement(
-                  customText: CustomTextElementModel(text: "B", textStyle: customEditableTextController.customTextStyle.value), index: customEditableTextController.cursorOffset.value),
+                  customText: CustomTextElementModel(text: "B", textStyle: customEditableTextController.customTextStyle.value),
+                  index: customEditableTextController.cursorOffset.value),
               label: "Input B",
               textSize: 16,
             ),
             const SizedBox(height: 16),
             CustomElevatedButton(
-              onClick: () => customEditableTextController.deleteTextElement(index: customEditableTextController.cursorOffset.value ),
+              onClick: () => customEditableTextController.deleteTextElement(index: customEditableTextController.cursorOffset.value),
               label: "Backspace",
               textSize: 16,
               backgroundColor: Colors.red,
@@ -60,9 +95,11 @@ class MyApp extends StatelessWidget {
               backgroundColor: Colors.yellow,
               textColor: Colors.black,
             ),
-            const SizedBox(height: 24,),
+            const SizedBox(
+              height: 24,
+            ),
             CustomElevatedButton(
-              onClick: (){
+              onClick: () {
                 customEditableTextController.moveLeft();
               },
               label: "Move left",
@@ -70,9 +107,11 @@ class MyApp extends StatelessWidget {
               backgroundColor: Colors.blueGrey,
               textColor: Colors.white,
             ),
-            const SizedBox(height: 24,),
+            const SizedBox(
+              height: 24,
+            ),
             CustomElevatedButton(
-              onClick: (){
+              onClick: () {
                 customEditableTextController.moveRight();
               },
               label: "Move right",
@@ -80,9 +119,13 @@ class MyApp extends StatelessWidget {
               backgroundColor: Colors.blueGrey,
               textColor: Colors.white,
             ),
-            const SizedBox(height: 24,),
+            const SizedBox(
+              height: 24,
+            ),
             CustomElevatedButton(
-              onClick: (){ConstantWidgets.showFlushBar(Get.context!, "Nothing to do");},
+              onClick: () {
+                ConstantWidgets.showFlushBar(Get.context!, "Nothing to do");
+              },
               label: "Random action",
               textSize: 16,
               backgroundColor: Colors.white,

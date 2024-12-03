@@ -1,4 +1,5 @@
 import 'package:calculator_app/controller/state/ui_values_controller.dart';
+import 'package:calculator_app/utilities/utf_codes.dart';
 import 'package:calculator_app/views/main_calculator_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +8,6 @@ import 'package:get/get.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
-
   @override
   Widget build(BuildContext context) {
     final UiValuesController uiValuesController = Get.put(UiValuesController());
